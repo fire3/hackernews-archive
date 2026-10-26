@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Hacker News 日报</title>
+<style>
+  :root{
+    --accent:#ff6600; --ink:#111827; --body:#374151; --muted:#6b7280;
+    --line:#e7e5e4; --bg:#f7f6f4; --card:#ffffff; --thead:#f6f4f1; --chip:#f1f5f9;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --ink:#f1f5f9; --body:#cbd5e1; --muted:#94a3b8;
+      --line:#2b3441; --bg:#0e131a; --card:#151c26; --thead:#1c2531; --chip:#1c2531; }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--body);
+    font:16px/1.8 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Droid Sans Fallback",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; padding-bottom:40px}
+  .wrap{max-width:1040px; margin:0 auto; padding:0 16px}
+
+  .hero{background:var(--accent); color:#fff; padding:30px 0 24px; border-radius:0 0 18px 18px}
+  .hero .wrap{padding:0 20px}
+  .kick{font-size:12px; letter-spacing:.22em; text-transform:uppercase; opacity:.85}
+  .hero h1{margin:.2em 0 .12em; font-size:clamp(24px,4.8vw,36px); line-height:1.25}
+  .hero .date{font-size:13.5px; opacity:.92}
+  .hero .sub{font-size:14px; opacity:.9; margin-top:4px}
+  .stats{display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:12px; font-size:13px}
+  .stats span{background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.24);
+    border-radius:999px; padding:3px 11px}
+
+  h2{font-size:19px; color:var(--accent); margin:30px 0 10px; padding-left:11px;
+    border-left:5px solid var(--accent); line-height:1.4}
+  h3{font-size:15.5px; color:var(--ink); margin:16px 0 6px}
+  p{margin:.55em 0}
+  a{color:var(--accent)}
+
+  .tw{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:8px 0 10px;
+    border:1px solid var(--line); border-radius:10px}
+  .tw table{margin:0; border:0}
+  table{border-collapse:collapse; width:100%; font-size:15px; background:var(--card)}
+  th,td{border-bottom:1px solid var(--line); padding:8px 11px; text-align:left}
+  th{background:var(--thead); color:var(--ink); font-weight:700; font-size:13.5px}
+  tr:last-child td{border-bottom:0}
+
+  footer{margin-top:26px; padding-top:14px; border-top:1px solid var(--line);
+    font-size:12.5px; color:var(--muted); line-height:1.8}
+  .foot{margin:0}
+
+  @media (min-width:900px){ h2{margin-top:34px} }
+  @media print{
+    body{background:#fff; padding:0; font-size:10.5pt}
+    .hero{background:#fff; color:#000; border-radius:0; border-bottom:2px solid var(--accent); padding:0 0 8px}
+    .stats span{border:1px solid #999}
+    .tw{overflow:visible}
+    h2{break-after:avoid}
+  }
+  
+  .headline{font-size:19px;line-height:1.6;font-weight:700;color:var(--ink);
+    background:rgba(255,102,0,.08);border-left:4px solid var(--accent);border-radius:8px;
+    padding:12px 14px;margin:6px 0}
+  ul.highlights{margin:.2em 0 .8em;padding-left:1.15em}
+  ul.highlights li{margin:.35em 0}
+  .overview{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;color:var(--body);margin:10px 0 16px}
+  .repo{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;margin:12px 0;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+  .rep-head{font-size:17px;font-weight:700;color:var(--ink);line-height:1.45}
+  .rank{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;
+    border-radius:50%;background:var(--accent);color:#fff;font-size:12.5px;margin-right:8px;vertical-align:1px}
+  .rep-meta{font-size:13px;color:var(--muted);margin:4px 0 2px}
+  .src{color:var(--muted)}
+  .repo-link{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 8px;
+    word-break:break-all;text-decoration:none}
+  .rep-sum{font-size:16px;line-height:1.85;color:var(--body);margin:.3em 0}
+  .cmt-ttl{font-size:14px;font-weight:700;color:var(--accent);margin:12px 0 4px}
+  .cmts{padding-left:1.2em;margin:.2em 0}
+  .cmts li{font-size:15px;line-height:1.75;margin:.3em 0}
+  .badge-repeat{font-size:11.5px;border:1px solid var(--line);border-radius:999px;
+    padding:0 8px;margin-left:6px;color:var(--muted);font-weight:400}
+  .foot{margin-top:24px;border-top:1px solid var(--line);padding-top:12px;
+    font-size:12.5px;color:var(--muted);line-height:1.8}
+  .na{color:#b6bcc5}
+
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="kick">HACKER NEWS · DAILY BRIEF</div>
+    <h1>Hacker News 日报</h1>
+    <div class="date">2026-10-26</div>
+    <div class="sub">AI 降价与能力边界同台，两场选举抢镜</div>
+    <div class="stats"><span>15 条链接</span><span>120 条评论</span><span>AI 中文小结</span></div>
+  </div>
+</header>
+<main class="wrap">
+
+<div class="hdr">
+
+
+
+<div style="font-size:16.1pt;font-weight:bold;color:#586069;margin-bottom:3px;">一句话概括</div>
+<div class="headline">AI 降价与能力边界同台，两场选举抢镜</div>
+<div style="font-size:16.1pt;font-weight:bold;color:#586069;margin-bottom:3px;">今日话题</div>
+<ul class="highlights"><li>OpenAI 与 Anthropic 数月内降价最高 80%，缓存读取成主战场</li><li>十年前的 CNN 以 62% 准确率击败前沿 LLM 的 42%</li><li>巴西 Lula 与塞尔维亚学生运动双双获胜，引发民主争论</li><li>IBM 称开源权重模型已够好，评论质疑其卖硬件的算盘</li><li>r/opensource 禁单人项目与 LLM 项目，资格之争爆发</li></ul>
+<p class="overview">今天 HN 的主线仍是 AI，但焦点从能力神话转向价格、专用性与商业后果：模型价格雪崩，通用大模型却在皮肤癌诊断上输给老 CNN，AI 实验室则在亲手拆掉软件收费亭。政治话题同样高热，巴西与塞尔维亚的两场选举把投票程序、媒体自由和「压迫」的定义吵成一片。共识是 AI 已足够便宜且无处不在，分歧在于它究竟让谁受益、又摧毁了谁。</p>
+
+<h2>热门链接与讨论</h2>
+</div>
+<div class="repo"><div class="rep-head"><span class="rank">1</span><span class="rep-name">巴西大选计票结束，Lula 获胜</span></div><div class="rep-meta">413 分 ｜ 436 评论 ｜ <span class="src">www.reuters.com</span></div><a class="repo-link" href="https://www.reuters.com/live/brazil-election-live-lula-bolsonaro-face-off-presidential-runoff-2026-10-25/">https://www.reuters.com/live/brazil-election-live-lula-bolsonaro-face-off-presidential-runoff-2026-10-25/</a><p class="rep-sum">路透社直播报道巴西总统大选决选，最终计票完成后 Lula 击败 Bolsonaro 阵营获胜，这条链接以 436 条评论成为当日最热。原文未抓取成功，讨论集中在选举程序争议：有人指责选举机构对 Lula 阵营网开一面，也有人指出部分市长阻断通往投票站的公交，延长投票时间正是对此的补救。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论称 Lula 阵营做了 2022 年 Bolsonaro 被禁止的选举操作，投票时间还被延长，认为结果不公。</li><li>反驳者指出，Bolsonaro 阵营的市长阻挠开往 Lula 支持区的公交，法院才紧急延长投票，且按票差本来也不影响结果。</li><li>关于贴有政党标识的公交是否构成选举犯罪，双方从法律细节吵到严重性，有人认为程序瑕疵不该与冲击国会相提并论。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">2</span><span class="rep-name">AI 让 UC Berkeley 数学教授觉得作业没必要批改</span></div><div class="rep-meta">218 分 ｜ 319 评论 ｜ <span class="src">www.dailycal.org</span></div><a class="repo-link" href="https://www.dailycal.org/news/campus/academics/ai-use-leads-uc-berkeley-math-professor-to-see-no-point-in-grading-homework/article_bdf1eae2-c08b-491f-b9f1-81a7cea177de.html">https://www.dailycal.org/news/campus/academics/ai-use-leads-uc-berkeley-math-professor-to-see-no-point-in-grading-homework/article_bdf1eae2-c08b-491f-b9f1-81a7cea177de.html</a><p class="rep-sum">Daily Cal 报道，UC Berkeley 一位数学教授因学生普遍用 AI 完成作业，认为批改作业已失去意义；原文未取到。HN 讨论基本认同作业作为评分依据已失效，分歧在于替代方案与责任归属。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>主流建议是回归课堂闭卷考试，甚至随机抽题的口试，作业不计分但必须完成，学不学由学生自己负责。</li><li>有人以 Berkeley 经历说明作业历来只占极小比重、成绩主要看期中期末，当时也没人抱怨，学校应回到老做法。</li><li>有评论指出学生存在双曲贴现，后果不立刻到来就不做作业，事后却迁怒老师；也有人调侃雇主正需要这种能筛人的学位。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">3</span><span class="rep-name">OpenAI 与 Anthropic 数月内把 LLM 价格砍到最高 80%，为什么</span></div><div class="rep-meta">312 分 ｜ 309 评论 ｜ 已读原文 ｜ <span class="src">minimaxir.com</span></div><a class="repo-link" href="https://minimaxir.com/2026/10/cheap-llms/">https://minimaxir.com/2026/10/cheap-llms/</a><p class="rep-sum">文章按时间线梳理两家公司从 GPT-5.6 到 GPT-6.1、从 Sonnet 5 到 Opus 5.5 的连续降价：GPT-5.6 Luna 一次性降 80% 至每百万 token 输入 0.20 美元、输出 1.20 美元，GPT-6 Sol 又把输入输出价格减半。作者强调 agent 写代码时缓存读取占总 token 支出的 96% 到 99%，Fable 5.1 把缓存读取费降 75% 等于整体成本降 70% 到 75%，因此缓存定价才是真正的战场。降价既来自双方针锋相对，也来自开源权重模型压力，例如 DeepSeek Flash V4.1 1017 在 Artificial Analysis 指数上从 24 升到 45，价格仍约为每百万 token 输入 0.15 美元、输出 0.60 美元。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论预计 token 厂商会像移动数据运营商一样，吞吐和效率不断提升却逃不过商品化，很难独吞技术带来的经济收益。</li><li>有人反驳无限量套餐不会到来，因为 agent 和子任务会自动烧掉大量 token；对方则认为会像运营商那样名义无限、极少数人触顶。</li><li>关于无限套餐的形态，有人预测会按档位限制并行 agent 数量或模型智能，再退化成单线程或降智版本。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">4</span><span class="rep-name">十年前的老 CNN 在皮肤癌诊断上胜过前沿 LLM</span></div><div class="rep-meta">558 分 ｜ 237 评论 ｜ 已读原文 ｜ <span class="src">lynchlab.net</span></div><a class="repo-link" href="https://lynchlab.net/llm-skin-cancer">https://lynchlab.net/llm-skin-cancer</a><p class="rep-sum">作者用 MILK10k 中 200 个经活检确认的病灶测试 GPT-6 Astra 与 Claude Fable 5.1，两者六分类正确数分别为 84 和 85，即 42%，而基于 Inception v3、在单张 H100 上微调约二十分钟的 CNN 对了 125 个，即 62%，且能在手机浏览器里通过 WebGPU 本地运行。CNN 在 30 个黑色素瘤中认出 13 个，两个 LLM 分别只有 8 和 11 个；LLM 还各有偏好答案，Astra 把 75 个病灶判为基底细胞癌而实际只有 25 个，Fable 5.1 把 53 个判为光化性角化病而实际只有 20 个。作者也承认样本小、每个 LLM 只跑一次，并披露自己用 Claude Code 做分析与初稿。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>最高赞类比是计算器做乘除也胜过 LLM，认为这只能说明专用工具在窄任务上更强。</li><li>有人回应说给 LLM 接上计算器工具，差距就消失了；但也有人指出性能不只是准确率，能耗和每次任务成本同样重要。</li><li>有评论感慨为了算 1 加 2 要做上万亿次矩阵乘法，认为通用模型在专用任务上效率荒谬。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">5</span><span class="rep-name">我拒绝接受被审查的互联网，来 FOSDEM 27 一起行动</span></div><div class="rep-meta">469 分 ｜ 228 评论 ｜ <span class="src">talkweb.eu</span></div><a class="repo-link" href="https://talkweb.eu/openweb/4558/">https://talkweb.eu/openweb/4558/</a><p class="rep-sum">文章是作者对网络审查的公开拒绝，并号召人们参加 FOSDEM 27 讨论开放网络；原文未抓取成功。评论很快从国家审查转向 AI 生成内容造成的另一种封锁：内容多到无法筛选，付费墙又把可及性进一步压缩。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论认为审查可能不是最大问题，AI 内容洪流会淹没真正有用的信息，找到可靠内容并负担得起检索才是难题。</li><li>围绕 Brandolini 定律展开：反驳胡说所需的能量比生产胡说高一个数量级，机器也难以可靠区分真伪。</li><li>也有人悲观地认为 AI 会帮权力建起没有越狱、没有漏洞的完美牢笼，技术更可能加固而非打破控制。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">6</span><span class="rep-name">JetBrains 发布 Thinkrail</span></div><div class="rep-meta">214 分 ｜ 160 评论 ｜ <span class="src">github.com</span></div><a class="repo-link" href="https://github.com/JetBrains/thinkrail">https://github.com/JetBrains/thinkrail</a><p class="rep-sum">JetBrains 在 GitHub 上线 Thinkrail，仓库介绍称其为围绕 pi 编码 agent 构建的丰富界面；原文只抓到仓库导航文字。HN 讨论把它比作数字版的「法式挂板」，重点在于减少切换项目时的摩擦，而非单纯收纳。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论称赞这是朝最终形态演进的界面，数字工具缺少像法式挂板那样能把同一项目所需工具挂上一条轨道的机制。</li><li>有人解释法式挂板就是两块斜切木板互相咬合、无需额外紧固件，便于在车间里灵活重排工具。</li><li>也有评论认为 agent 既然要跑代码、截图、点击，就不该全放在本地，托管加多端可视界面更合理；另有人表示要离开现有工具需要很强的理由。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">7</span><span class="rep-name">塞尔维亚 Vucic 承认败选，学生运动取得历史性胜利</span></div><div class="rep-meta">293 分 ｜ 158 评论 ｜ <span class="src">www.reuters.com</span></div><a class="repo-link" href="https://www.reuters.com/world/europe/serbia-votes-students-seek-unseat-vucic-snap-election-2026-10-25/">https://www.reuters.com/world/europe/serbia-votes-students-seek-unseat-vucic-snap-election-2026-10-25/</a><p class="rep-sum">路透社报道塞尔维亚总统 Vucic 在提前选举中承认失败，学生运动取得历史性胜利；原文未抓取成功。评论在庆祝与质疑之间拉扯：一方强调 14 年权力集中、媒体不自由终于结束，另一方追问若真有高压统治，为何还能靠选票完成更替。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论称这是美好的一天，14 年压制、绝对权力、媒体不自由和疯狂的网络水军一起终结。</li><li>反对者认为能和平投票换政府说明制度仍有底线，用「压迫」一词是语义膨胀；随后被指为相对剥夺谬误和「没有真正的苏格兰人」。</li><li>有当地评论补充，执政党只有在投票率约 70%、过半选民反对时才接受败选，且仍有相当于全体选民 5% 到 10% 的选票盗窃；全国 650 万人口却有 640 万登记选民。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">8</span><span class="rep-name">美国不平等正以意想不到的方式恶化</span></div><div class="rep-meta">79 分 ｜ 148 评论 ｜ <span class="src">theconversation.com</span></div><a class="repo-link" href="https://theconversation.com/us-inequality-is-getting-worse-in-ways-you-might-not-expect-294075">https://theconversation.com/us-inequality-is-getting-worse-in-ways-you-might-not-expect-294075</a><p class="rep-sum">The Conversation 文章讨论美国不平等在可负担性等方面出现的新变化，HN 页面只抓到 ACA 相关片段与订阅提示。讨论集中在财富上限与下限是否该同时设定，以及货币是否零和。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>高赞观点是财富天花板可以不设限，但地板必须抬高；反驳者说若别人的地板在下沉，你的天花板也不该那么高。</li><li>有人主张金钱零和，一个人多拿必然有人少拿；立刻有人纠正央行可以印钞，绝对意义上的钱并非零和。</li><li>进一步的分歧在于印钞是否等于强制转移，以及真正零和的是对稀缺资源和时间的索取权，而不是货币符号本身。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">9</span><span class="rep-name">IBM CEO 称开源权重模型已足够好且适合本地部署</span></div><div class="rep-meta">251 分 ｜ 144 评论 ｜ <span class="src">www.theregister.com</span></div><a class="repo-link" href="https://www.theregister.com/systems/2026/10/22/ibm-ceo-says-open-weight-models-are-now-irresistibly-good-and-cheap-on-prem/5304640">https://www.theregister.com/systems/2026/10/22/ibm-ceo-says-open-weight-models-are-now-irresistibly-good-and-cheap-on-prem/5304640</a><p class="rep-sum">The Register 报道 IBM CEO 认为开源权重模型在质量和成本上已具备本地部署的吸引力；原文未抓取成功。评论迅速把话题转向 IBM 的硬件生意，质疑「便宜」是否只是卖机器的开场白。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>最高赞讽刺说，运行模型所需的硬件恰好是 IBM 乐意卖给你的东西。</li><li>有人表示若 IBM 真推出能高效跑大模型且价格可承受的硬件会排队购买，但「可承受」和「IBM」很少出现在同一句话里。</li><li>为 IBM 辩护者举 PC 革命为例，认为它有资金、人才和硬件部门，可以挑战 Nvidia；反对者则指其当年进入 PC 市场也晚了五年，且 2500 亿美元市值在 AI 巨头面前并不算大。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">10</span><span class="rep-name">俄勒冈警方为一名警员的记录向本地媒体开价 250 万美元</span></div><div class="rep-meta">459 分 ｜ 124 评论 ｜ <span class="src">theintercept.com</span></div><a class="repo-link" href="https://theintercept.com/2026/10/01/oregon-police-misconduct-public-records-cost-fee/">https://theintercept.com/2026/10/01/oregon-police-misconduct-public-records-cost-fee/</a><p class="rep-sum">The Intercept 报道 Eugene 警方对一家本地新闻媒体的公共记录请求开出 2,484,599.04 美元的账单，声称需要至少 44816 小时人工处理；原文被订阅墙截断，但这些数字在评论中被反复引用。按每周 40 小时算，这相当于二十多年的工作量。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>评论一致认为 44816 小时约等于 21 年，为一个人的记录做检索和涂黑荒谬到近乎挑衅，理应被诉讼强制公开。</li><li>有人指出政府记录本就应按可被公开索取的方式归档，机构自己管理混乱不能成为收天价的理由，且审核涂黑可以大幅简化。</li><li>有评论建议顺势再提一份公共记录请求，要求公开这个数字是如何算出来的、用了哪家公司的技术。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">11</span><span class="rep-name">r/opensource 禁止所有单人项目和用 LLM 的项目</span></div><div class="rep-meta">88 分 ｜ 111 评论 ｜ <span class="src">www.reddit.com</span></div><a class="repo-link" href="https://www.reddit.com/r/opensource/comments/1xelcuf/your_tokens_arent_valuable_no_more_ai">https://www.reddit.com/r/opensource/comments/1xelcuf/your_tokens_arent_valuable_no_more_ai</a><p class="rep-sum">Reddit 的 r/opensource 版块出台新规，禁止单人维护的项目以及使用 LLM 的项目；原帖未抓取成功。HN 讨论认为禁 AI 尚可理解，但按贡献者数量设门槛会误伤大量经典个人项目。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论指出 D. J. Bernstein 的软件全都会被这条规则封杀，称这是典型的 Reddit 式荒谬。</li><li>有人提醒发帖者是注册 24 分钟的编号小号，背后是利用住宅代理的垃圾信息潮，版主正在逐个封禁；随即又因发帖者账号年龄引发互相质疑。</li><li>也有人认为这是版块被 LLM 生成的项目推广淹没后的自保，并预测风向会反转，未来项目反而会因没经过 AI 审查而被拒。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">12</span><span class="rep-name">挑战消失了</span></div><div class="rep-meta">69 分 ｜ 111 评论 ｜ 已读原文 ｜ <span class="src">blog.alxgsv.com</span></div><a class="repo-link" href="https://blog.alxgsv.com/challenge-is-gone/">https://blog.alxgsv.com/challenge-is-gone/</a><p class="rep-sum">短文感叹「挑战已经消失」，作者在文末注明这篇的拼写和标点由 AI 修正，这个细节成了讨论焦点。评论围绕一个尖锐问题展开：当 AI 两秒就能改好拼写，人还有没有必要为掌握基础技能而刻意练习。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论直接把这句署名当成新的挑战：要么学会拼写，要么学会与错误共处。</li><li>有人指出该句本身就有主谓一致问题，恰好印证了作者的观点；也有人反驳拼写和标点是两回事。</li><li>更深的讨论把它类比为汽车时代后的锻炼：过去学习是办事的必需，如今只为「锻炼大脑」，需要额外的自律和动机。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">13</span><span class="rep-name">Adobe 诉 ArtCraft 案教给我们什么</span></div><div class="rep-meta">89 分 ｜ 98 评论 ｜ 已读原文 ｜ <span class="src">techbronerd.substack.com</span></div><a class="repo-link" href="https://techbronerd.substack.com/p/openai-and-anthropic-wanted-to-replace">https://techbronerd.substack.com/p/openai-and-anthropic-wanted-to-replace</a><p class="rep-sum">文章认为 AI 实验室把编程能力做成每月二十美元的订阅，等于向所有客户分发炸药：软件公司的护城河本是开发难度带来的收费亭，而 AI 让周末项目就能克隆 Photoshop，收入不会转移到实验室而是直接蒸发。作者称模型厂商陷入两难，便宜会摧毁客户，昂贵会摧毁需求，并指出 2023 年 Llama 开源后「人为稀缺」的水坝已经决口。文中还提到亚马逊、Alphabet、Meta 2026 年合计约五千亿美元的资本开支。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论反驳作者最悲观的判断，认为把收费品变成免费品本身就是革命，软件公司可能倒下，但所有人都会因不再交过路费而受益。</li><li>有人质疑免费模型的时效性，模型知识停在训练截止日，API 和框架不断更新，一两年后就过时，总得有人承担重新训练的成本。</li><li>回应者认为模型能靠文档、OpenAPI 描述、网页抓取和试错来适配新 API，且同尺寸模型的再训练成本会持续下降，例如 MiMo-2.6 的强化学习只花了 350 万美元。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">14</span><span class="rep-name">Dolly Parton 的 Imagination Library</span></div><div class="rep-meta">542 分 ｜ 94 评论 ｜ 已读原文 ｜ <span class="src">imaginationlibrary.com</span></div><a class="repo-link" href="https://imaginationlibrary.com/">https://imaginationlibrary.com/</a><p class="rep-sum">链接指向 Dolly Parton 的 Imagination Library 项目主页，原文实际返回的是 Cloudflare 拦截页，未抓到项目介绍。HN 讨论几乎全是赞誉，把 Dolly 视为极少见的口碑无死角的公众人物，并把该项目归入互助实践。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论说应该赞颂 Dolly 这样的人，而不是那些不值得庆祝的名人；在她身上很难找到被人说坏话的角度。</li><li>有人列举她的歌声、创作、演技、自嘲式幽默和对各类粉丝的包容，认为这种长期正面的公众形象极为罕见。</li><li>也有人把 Imagination Library 定义为一种互助，即向社区分享技能、知识和物资，并鼓励大家参与本地互助组织，同时调侃 AI、航天、社交公司也需要这样的 CEO。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">15</span><span class="rep-name">一位数学家如何解读 AI 的未来</span></div><div class="rep-meta">58 分 ｜ 85 评论 ｜ <span class="src">www.theatlantic.com</span></div><a class="repo-link" href="https://www.theatlantic.com/ideas/2026/10/ai-math-human-future/689133/">https://www.theatlantic.com/ideas/2026/10/ai-math-human-future/689133/</a><p class="rep-sum">The Atlantic 刊出数学家谈 AI 与人类未来的文章，原文未抓取成功，只能依据标题与讨论还原。HN 的讨论从「AI 是否会成功」转向「它已经成功到什么程度、当下的冲击如何」。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>高赞用九段式心路历程概括从业者态度：从「这不可能成」「只是一堆垃圾」，到「被要求使用、确实省钱」，再到「庆幸还有工作」和「无所谓」。</li><li>有人搬出 1980 年代日本第五代计算机与 Prolog 的旧叙事，质疑这轮又是炒作；立刻被反问 AI 是否证明了费马大定理。</li><li>回答是并没有，它只是在人类协助下把 Wiles-Taylor 的证明形式化到 Lean 里；另有人强调 AI 已经兑现，问题不再是未来能力，而是当下能力会带来什么冲击。</li></ul></div>
+
+<div class="foot">共 15 条链接，取到原文 5 条，收录评论 120 条。<br>
+本日报由 Ember 自动生成，摘要与评论要点由 AI 综合原文与讨论生成，仅供参考。</div>
+
+</main>
+</body>
+</html>
