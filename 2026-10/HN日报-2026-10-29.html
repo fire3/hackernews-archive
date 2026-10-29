@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Hacker News 日报</title>
+<style>
+  :root{
+    --accent:#ff6600; --ink:#111827; --body:#374151; --muted:#6b7280;
+    --line:#e7e5e4; --bg:#f7f6f4; --card:#ffffff; --thead:#f6f4f1; --chip:#f1f5f9;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --ink:#f1f5f9; --body:#cbd5e1; --muted:#94a3b8;
+      --line:#2b3441; --bg:#0e131a; --card:#151c26; --thead:#1c2531; --chip:#1c2531; }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--body);
+    font:16px/1.8 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Droid Sans Fallback",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; padding-bottom:40px}
+  .wrap{max-width:1040px; margin:0 auto; padding:0 16px}
+
+  .hero{background:var(--accent); color:#fff; padding:30px 0 24px; border-radius:0 0 18px 18px}
+  .hero .wrap{padding:0 20px}
+  .kick{font-size:12px; letter-spacing:.22em; text-transform:uppercase; opacity:.85}
+  .hero h1{margin:.2em 0 .12em; font-size:clamp(24px,4.8vw,36px); line-height:1.25}
+  .hero .date{font-size:13.5px; opacity:.92}
+  .hero .sub{font-size:14px; opacity:.9; margin-top:4px}
+  .stats{display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:12px; font-size:13px}
+  .stats span{background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.24);
+    border-radius:999px; padding:3px 11px}
+
+  h2{font-size:19px; color:var(--accent); margin:30px 0 10px; padding-left:11px;
+    border-left:5px solid var(--accent); line-height:1.4}
+  h3{font-size:15.5px; color:var(--ink); margin:16px 0 6px}
+  p{margin:.55em 0}
+  a{color:var(--accent)}
+
+  .tw{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:8px 0 10px;
+    border:1px solid var(--line); border-radius:10px}
+  .tw table{margin:0; border:0}
+  table{border-collapse:collapse; width:100%; font-size:15px; background:var(--card)}
+  th,td{border-bottom:1px solid var(--line); padding:8px 11px; text-align:left}
+  th{background:var(--thead); color:var(--ink); font-weight:700; font-size:13.5px}
+  tr:last-child td{border-bottom:0}
+
+  footer{margin-top:26px; padding-top:14px; border-top:1px solid var(--line);
+    font-size:12.5px; color:var(--muted); line-height:1.8}
+  .foot{margin:0}
+
+  @media (min-width:900px){ h2{margin-top:34px} }
+  @media print{
+    body{background:#fff; padding:0; font-size:10.5pt}
+    .hero{background:#fff; color:#000; border-radius:0; border-bottom:2px solid var(--accent); padding:0 0 8px}
+    .stats span{border:1px solid #999}
+    .tw{overflow:visible}
+    h2{break-after:avoid}
+  }
+  
+  .headline{font-size:19px;line-height:1.6;font-weight:700;color:var(--ink);
+    background:rgba(255,102,0,.08);border-left:4px solid var(--accent);border-radius:8px;
+    padding:12px 14px;margin:6px 0}
+  ul.highlights{margin:.2em 0 .8em;padding-left:1.15em}
+  ul.highlights li{margin:.35em 0}
+  .overview{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;color:var(--body);margin:10px 0 16px}
+  .repo{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;margin:12px 0;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+  .rep-head{font-size:17px;font-weight:700;color:var(--ink);line-height:1.45}
+  .rank{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;
+    border-radius:50%;background:var(--accent);color:#fff;font-size:12.5px;margin-right:8px;vertical-align:1px}
+  .rep-meta{font-size:13px;color:var(--muted);margin:4px 0 2px}
+  .src{color:var(--muted)}
+  .repo-link{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 8px;
+    word-break:break-all;text-decoration:none}
+  .rep-sum{font-size:16px;line-height:1.85;color:var(--body);margin:.3em 0}
+  .cmt-ttl{font-size:14px;font-weight:700;color:var(--accent);margin:12px 0 4px}
+  .cmts{padding-left:1.2em;margin:.2em 0}
+  .cmts li{font-size:15px;line-height:1.75;margin:.3em 0}
+  .badge-repeat{font-size:11.5px;border:1px solid var(--line);border-radius:999px;
+    padding:0 8px;margin-left:6px;color:var(--muted);font-weight:400}
+  .foot{margin-top:24px;border-top:1px solid var(--line);padding-top:12px;
+    font-size:12.5px;color:var(--muted);line-height:1.8}
+  .na{color:#b6bcc5}
+
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="kick">HACKER NEWS · DAILY BRIEF</div>
+    <h1>Hacker News 日报</h1>
+    <div class="date">2026-10-29</div>
+    <div class="sub">今日HN：Gemini 4 Carbon登场，苹果安全与ICE监控引激辩</div>
+    <div class="stats"><span>15 条链接</span><span>120 条评论</span><span>AI 中文小结</span></div>
+  </div>
+</header>
+<main class="wrap">
+
+<div class="hdr">
+
+
+
+<div style="font-size:16.1pt;font-weight:bold;color:#586069;margin-bottom:3px;">一句话概括</div>
+<div class="headline">今日HN：Gemini 4 Carbon登场，苹果安全与ICE监控引激辩</div>
+<div style="font-size:16.1pt;font-weight:bold;color:#586069;margin-bottom:3px;">今日话题</div>
+<ul class="highlights"><li>Gemini 4 Carbon发布，称在网络安全基准与长任务能力上领先</li><li>MacBook Pro新增触控与PROLED XDR屏，芯片仍为M5引不满</li><li>ICE被曝对左翼运动大规模监控，另有4.1万员工数据泄漏</li><li>苹果git仍信任被攻破的eMudhra证书，macOS更新还回滚补丁</li><li>StackOverflow月提问量跌破1000，AI冲击与社区氛围同被归因</li></ul>
+<p class="overview">今天的HN由AI产品与AI引发的社会后果两条线交织：Google抛出主打网络安全与长周期任务的Gemini 4 Carbon，Cursor发布Agent SDK，社区既兴奋又厌倦层出不穷的新框架。另一边是权力与信任问题：ICE监控左翼运动、4.1万国土安全部人员信息泄漏、苹果开发工具仍信任被攻破的CA，讨论普遍指向制度性失责而非单点事故。共识只在少数地方出现，比如对StackOverflow衰落几乎无人惋惜；分歧则集中在AI该被抵制还是被引导，以及基准分数还能不能信。</p>
+
+<h2>热门链接与讨论</h2>
+</div>
+<div class="repo"><div class="rep-head"><span class="rank">1</span><span class="rep-name">带 PROLED XDR 显示屏与触控的 MacBook Pro</span></div><div class="rep-meta">578 分 ｜ 976 评论 ｜ <span class="src">www.apple.com</span></div><a class="repo-link" href="https://www.apple.com/macbook-pro/proled-xdr-display/">https://www.apple.com/macbook-pro/proled-xdr-display/</a><p class="rep-sum">苹果发布新款 MacBook Pro，主打 PROLED XDR 显示屏并首次加入触控，社区讨论量高达976条。原文未能抓取，从评论看，争议集中在两点：新机仍用 M5 系列而非 M6，被认为令人失望；触控屏则被质疑是伪需求。也有评论解释了苹果的芯片节奏，以及 M6 Pro/Max 可能被跳过、直接提前到 M7 世代的传闻。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>多名用户抱怨没有 M6 只有 M5，但也有人指出历史上 Pro/Max 版本总与下一代基础芯片同期出现，因此 M5 Pro/Max 强于 M6 也属正常。</li><li>有评论称 M7 世代将在本地 LLM 性能上有大幅提升，苹果因此跳过 M6 Pro/Max 提前推出 M7。</li><li>关于触控屏，不少人表示从未需要，甚至反感别人指着屏幕留下指纹；反驳者提醒 HN 用户对消费电子的偏好本就是少数派，可拆卸电池就是例子。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">2</span><span class="rep-name">有证据显示 ICE 对左翼社会运动实施间谍行动</span></div><div class="rep-meta">1,138 分 ｜ 940 评论 ｜ <span class="src">www.wired.com</span></div><a class="repo-link" href="https://www.wired.com/story/ice-is-running-one-of-the-largest-anti-left-surveillance-operations-in-us-history/">https://www.wired.com/story/ice-is-running-one-of-the-largest-anti-left-surveillance-operations-in-us-history/</a><p class="rep-sum">WIRED 报道称，ICE 正在运行美国史上规模最大的反左翼监控行动之一，HN 讨论达940条。原文正文未取到，评论焦点不在个案，而在监控能力的来源：机构可以直接向数据经纪商购买位置与社交媒体数据，从而绕过搜查令。讨论还延伸到第二修正案的历史与“持枪权只保护某些人”的批判。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>高赞观点认为大部分监控能力是“买来的而非造的”，堵住数据经纪商这个漏洞比对抗某一个机构更有意义。</li><li>有人指出监控权力随生产能力的私有化而集中到越来越少的人手中，外包让问责更难。</li><li>围绕持枪权的争论很激烈：一方以1967年加州 Mulford 法案为例，说明当年限枪正是为了解除黑豹党武装；也有人怀疑有人刻意把讨论引向暴力路线。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">3</span><span class="rep-name">Gemini 4 Carbon</span></div><div class="rep-meta">933 分 ｜ 750 评论 ｜ 已读原文 ｜ <span class="src">blog.google</span></div><a class="repo-link" href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/">https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/</a><p class="rep-sum">Google DeepMind 发布 Gemini 4 Carbon，称其在 Artificial Analysis 智能指数 v5.0 上以59分排名第一，SEC-bench Pro 达88.2%、ExploitGym 54.8%、CWE-bench 71.0%，WebDev Arena 提升89个 elo 至第4名（1768）。定价与 Argon 相同，输入每百万 token 2美元、输出10美元，缓存输入享95%折扣。发布采取审慎节奏，先向部分网络防御者和 Fairwind 合作伙伴开放，并参与美国政府自愿的发布前测试。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人把“把 Terminal-Bench 4.0 上的作弊成功率降到0.0%、作弊尝试降到0.4%”视为最关键的进步，认为作弊是上一代 Gemini 最大的可用性障碍。</li><li>多人质疑 Artificial Analysis 排名：Carbon 自称第一但指数尚未更新，且新指数纳入外部无法复现的私有基准。</li><li>为私有基准辩护的意见认为，公开基准已被各家针对性训练，只信自己能测的题反而不客观。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">4</span><span class="rep-name">肯塔基州一名人文主义者成为首个获 AI 宗教豁免的人</span></div><div class="rep-meta">460 分 ｜ 503 评论 ｜ <span class="src">religionnews.com</span></div><a class="repo-link" href="https://religionnews.com/2026/10/26/in-a-first-a-humanist-granted-a-religious-exemption-from-using-ai/">https://religionnews.com/2026/10/26/in-a-first-a-humanist-granted-a-religious-exemption-from-using-ai/</a><p class="rep-sum">Religion News Service 报道，肯塔基州一位大学研究者以人文主义信仰为由，获得不使用 AI 的宗教豁免，成为首例。他的理由是：思考、伦理判断和处理人际关系的过程本身是成为道德主体的关键，把这部分劳动外包会削弱人的道德能力。原文未取到，评论主要在争论这种豁免是否成立、边界在哪。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>不少人认同“把思考外包会侵蚀道德能力”的论证，但强调重点应是警惕过度依赖，而非全面否定 AI。</li><li>有评论反问：开车、取暖、用电都在外包劳动，为何单挑 AI？回应是这些不涉及他作为研究者被强制使用的工具，且不该玩“谁更纯粹”的零和游戏。</li><li>关于边界，有人设想“超人类主义信仰要求我把一切同步给机器”能否同样获批，另有人指出 EEOC 规则下雇主不必违法迁就，重大负担可构成拒绝理由。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">5</span><span class="rep-name">苹果的 git 仍信任已被攻破的 eMudhra 证书</span></div><div class="rep-meta">1,134 分 ｜ 396 评论 ｜ 已读原文 ｜ <span class="src">emudhra.we-have-a-problem.com</span></div><a class="repo-link" href="https://emudhra.we-have-a-problem.com/apple.html">https://emudhra.we-have-a-problem.com/apple.html</a><p class="rep-sum">文章指出，苹果10月17日已知悉 eMudhra 证书事件，但截至10月28日，macOS 自带的 git、curl、python3 仍信任被攻破的证书；10月26日发布的 macOS 27.2 不仅未修复，还回滚了用户手动打的补丁。这意味着任何能处于网络路径上的人都可以拦截这些工具的 HTTPS 连接，git clone/pull 可能被投递攻击者选择的代码，GitHub token 等凭据也可能被截获。文章给出自检命令和端到端演示，并建议手动移除受影响根证书、每次系统更新后复查。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论实测发现自己的 curl 报证书错误，随后发现用的是 Homebrew 版本，而 /usr/bin/curl 依然能连上测试站点，说明系统证书仍受信任。</li><li>有人批评标题不够准确：问题本质是苹果仍在 /etc/ssl 中分发被攻破的 CA，git 只是与其他使用系统 CA 的程序一样的受害者。</li><li>评论普遍认为这是苹果在开发者工具安全上的明显失职，并提醒应评估 macOS CI runner 的供应链风险。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">6</span><span class="rep-name">StackOverflow 现在每月提问不足1000条</span></div><div class="rep-meta">445 分 ｜ 371 评论 ｜ <span class="src">data.stackexchange.com</span></div><a class="repo-link" href="https://data.stackexchange.com/stackoverflow/query/1926661#graph?t=1">https://data.stackexchange.com/stackoverflow/query/1926661#graph?t=1</a><p class="rep-sum">一条 Stack Exchange 数据查询显示，StackOverflow 每月新提问已跌破1000条，引发371条讨论。原文未取到，讨论在主因上分歧明显：一派归咎于 AI 编程助手替代了提问需求，另一派认为是新东家治理与社区长期的敌意氛围把人赶走，还有人指出整个 Stack Exchange 网络都在同步下滑，与各站审核政策无关。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人认为不能全怪 AI：所有权变更恰好在 ChatGPT 发布前后，时间上难分因果，但所有 Stack Exchange 站点同样下滑说明不只是审核问题。</li><li>有评论认为 SO 的极端敌意加速了用户流向当时唯一可行的替代品 AI，即便社区友善也只是延缓死亡。</li><li>也有人为其他 Stack Exchange 站点鸣不平，称非技术板块内容有趣、值得更多关注。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">7</span><span class="rep-name">西班牙托莱多附近两列高铁相撞</span></div><div class="rep-meta">195 分 ｜ 235 评论 ｜ 已读原文 ｜ <span class="src">www.euronews.com</span></div><a class="repo-link" href="https://www.euronews.com/video/2026/10/28/spain-first-footage-reveals-wreckage-of-deadly-high-speed-train-crash">https://www.euronews.com/video/2026/10/28/spain-first-footage-reveals-wreckage-of-deadly-high-speed-train-crash</a><p class="rep-sum">西班牙托莱多省 Urda 与 Los Yébenes 之间发生高铁追尾：一列马德里开往塞维利亚的列车撞上同一轨道上停着的另一列车，两节车厢脱轨，其中一节被撕裂。涉事列车分别载有397人和147人，原文称至少10人死亡并警告数字可能上升；评论区引用的后续报道称死亡已达68人、伤者逾百。这是西班牙2026年第二起重大铁路事故，1月南部相撞曾致45人死亡，首相 Sánchez 已取消行程。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论给出时间线：8:30 因基础设施问题关闭 LZB 列车控制系统，列车随即停车；8:36 有人判断“一切正常”允许列车全速通过；8:53 发生碰撞。</li><li>有人质问为何当今还会发生这种事、为何不能全程自动多重校验，反驳者指出许多铁路系统仍运行着上世纪中期的技术。</li><li>也有评论纠正“西班牙高铁很新所以不该老旧”的直觉：网络1980年代末开工，距今也已约40年。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">8</span><span class="rep-name">这个指纹识别脚本为什么在制造生物武器？</span></div><div class="rep-meta">1,226 分 ｜ 231 评论 ｜ 已读原文 ｜ <span class="src">nullpt.rs</span></div><a class="repo-link" href="https://nullpt.rs/fingerprinting-bioweapons">https://nullpt.rs/fingerprinting-bioweapons</a><p class="rep-sum">作者爬取 Tranco 前1万个站点，拦截 canvas 指纹相关调用，搭出 fingerprint.garden 收集各类指纹画布。其中一个画风精致的脚本来自 servicepipe.tech，代码用混淆符号名、隐藏 Unicode 字符串和疑似生物武器/越狱提示词伪装，看起来像在生成危险内容。作者判断这更可能是“反 LLM 混淆”：故意塞入会触发模型安全策略的词句，阻止 AI 辅助反混淆。实际功能只是普通反爬，收集的信号相当有限，且 servicepipe 与同名 .ru 站点有关联。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论分享类似经历：给待解禁文档加隐藏水印，结果对方邮件系统把文件判为可疑并无限期隔离，反倒证明了水印有效。</li><li>具体做法被补充为白底白字放在末页或页眉页脚、字号设为1，但提醒要加 aria-hidden，否则屏幕阅读器用户会读到。</li><li>有人指出随着 agent 工作流普及，这类“给机器看的陷阱文本”只会越来越多。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">9</span><span class="rep-name">Emacs 五十岁</span></div><div class="rep-meta">484 分 ｜ 207 评论 ｜ 已读原文 ｜ <span class="src">www.technologyreview.com</span></div><a class="repo-link" href="https://www.technologyreview.com/2026/10/20/1145399/emacs-turns-50/">https://www.technologyreview.com/2026/10/20/1145399/emacs-turns-50/</a><p class="rep-sum">MIT Technology Review 回顾 Emacs 五十年：从1962年 PDP-1 上的 TECO、1971年 Carl Mikkelsen 的 Control-R，到1976年 Stallman 在 MIT AI Lab 将其改造成“每个按键运行一个宏”的全屏编辑器。Guy Steele 为方便帮人调试，牵头统一命令集并引入 Meta 键，EMACS 由此得名。文章强调其围绕软件共享形成的社区，后来催生了自由软件运动和 GNU/Linux。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>高赞评论称 Emacs 是最接近 Lisp 机器的存在：完全可改造、自文档化的编程环境，“代码即 API”，不需要另设扩展接口。</li><li>有人遗憾 Emacs 在 Windows 上仍只支持 x64，呼吁尽快支持 arm64；随即有人调侃更希望 Windows 本身变成遗留平台。</li><li>也有人坦言多次尝试仍不习惯，转而着迷于 Glamorous Toolkit 这类图形化可编程环境。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">10</span><span class="rep-name">AlpineBSD</span></div><div class="rep-meta">215 分 ｜ 204 评论 ｜ 已读原文 ｜ <span class="src">wiki.alpinebsd.org</span></div><a class="repo-link" href="https://wiki.alpinebsd.org">https://wiki.alpinebsd.org</a><p class="rep-sum">AlpineBSD 是用 NetBSD 内核搭配 Alpine Linux 风格用户空间的操作系统，明确目标是尽可能少用 AI 生成软件：基础系统和主软件仓库不含任何 LLM 输出。它自带 apk-tools 与 busybox，用户空间略偏 GNU（如用 GNU make），当前使用 s6 作为 init 并计划支持 OpenRC。项目仍在早期，尚无安装器，NetBSD 内核对硬件支持有限。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论直言该 AI 政策“落后又愚蠢”，随即被反问：你一边抱怨糟糕的未来，别人明确把它剔除，你却说是倒退。</li><li>一位自称硬核 LLM 支持者的评论承认无 LLM 项目有其位置，但认为人类代码仍优于前沿模型，代价是生产力大幅下降。</li><li>争论最后落在策略上：反对者认为清除 LLM 产出既不可行也不是解法，支持者则认为即便大概率失败，尝试阻止也是一种责任。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">11</span><span class="rep-name">泄漏事件曝光4.1万名国土安全部员工，含 ICE 卧底探员</span></div><div class="rep-meta">321 分 ｜ 176 评论 ｜ <span class="src">www.wired.com</span></div><a class="repo-link" href="https://www.wired.com/story/massive-leak-exposes-41000-homeland-security-workers-including-undercover-ice-agents/">https://www.wired.com/story/massive-leak-exposes-41000-homeland-security-workers-including-undercover-ice-agents/</a><p class="rep-sum">WIRED 报道称一次大规模泄漏曝光了约4.1万名美国国土安全部工作人员的信息，其中包括 ICE 的卧底探员。原文未取到，讨论迅速转向两个方向：美国为何需要针对国内的卧底执法力量，以及这类数据泄漏对一线人员及其家属的现实危险。评论还附上了可搜索的泄漏数据前端。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论质问：为什么会存在针对本国的卧底间谍与执法者，这本身是否是我们想要的东西，并呼吁用选票表态。</li><li>有人指出若类似事件发生在非西方国家，美国媒体会直接用“秘密警察”“斯塔西”这类词。</li><li>关于“重复投稿”的争论中，有人引用 dang 的规则说明同一话题的多次提交不算重复，只有已有讨论后再次提交同一链接才算。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">12</span><span class="rep-name">Dayjob: Tax——用50个专业税务任务评测 AI agent</span></div><div class="rep-meta">232 分 ｜ 151 评论 ｜ 已读原文 ｜ <span class="src">surgehq.ai</span></div><a class="repo-link" href="https://surgehq.ai/blog/dayjob-tax">https://surgehq.ai/blog/dayjob-tax</a><p class="rep-sum">Surge AI 推出 DAYJOB: Tax，用50个覆盖八大税务领域的真实任务评测 agent，要求产出申报表、工作底稿、技术复核或客户建议。基准含1789个工作区文件（中位数30个，最多123个），包括1487份 PDF、117个 Excel 和38份 Word。结果按95%评分阈值计 pass@1：Claude Sonnet 5.5 以10.8%居首，Fable 5.1 为9.6%，Opus 5.5 为9.2%。文章用一个案例说明差距：卖房免税额有五年期限，Astra 五次尝试都没发现截止日，Opus 五次都发现了。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论分享自己的会计师报错税、损失约2万美元，认为顶级模型即便会犯同类错误，也有机会每年省下数千到数万美元。</li><li>反驳意见强调责任归属：出了错仍由纳税人承担，现实中很难真正把责任和损失转移给会计师。</li><li>有人补充在波兰的案例：会计师未申报还谎称已申报，朋友的公司几乎无法追回损失，只能无补偿解雇对方。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">13</span><span class="rep-name">Archive.today 链接的后续处理</span></div><div class="rep-meta">203 分 ｜ 143 评论 ｜ <span class="src">www.reddit.com</span></div><a class="repo-link" href="https://www.reddit.com/r/Seattle/comments/1xhf6qp/archivetoday_links_going_forward/">https://www.reddit.com/r/Seattle/comments/1xhf6qp/archivetoday_links_going_forward/</a><p class="rep-sum">r/Seattle 版主称发现 archive.today（即 archive.is）在归档页面中注入恶意链接，点击后会跳转到诱导下载的站点，因此调整了该站链接的使用规则。HN 讨论聚焦两点：这一指控缺乏独立验证与完整说明；以及 archive.today 过去的行为让这种指控并不令人意外。有用户按指引复现了跳转，但随后遭遇429限流，相关归档页面也已被清除。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>多名用户按给出的 archive.ph 链接点击“Filed on Tuesday”复现了跳转，证实会导向要求下载的站点，但很快被429拦住。</li><li>有评论指出标题容易被误读：注入恶意链接的是 archive.today 本身，而不是被归档的原网站。</li><li>发帖者自己也补充，应表述为“声称发现”，因为目前没有外部验证，也没有完整的技术说明。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">14</span><span class="rep-name">CNC 石雕</span></div><div class="rep-meta">470 分 ｜ 130 评论 ｜ <span class="src">carmelitegothic.com</span></div><a class="repo-link" href="https://carmelitegothic.com/cnc-stone-carving/">https://carmelitegothic.com/cnc-stone-carving/</a><p class="rep-sum">文章介绍一座修道院用 CNC 加工哥特式石构件，把中世纪建筑语汇与现代数控技术结合。原文未取到，但从讨论看，项目开篇那句“中世纪的建造者始终站在技术前沿”很受认同，评论还介绍了项目背后正是经营 Mystic Monk Coffee 的同一群修士。话题随后转向手工、传统行业与 AI 时代就业的联想。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人预测 AI 冲击编程岗位后，会有更多年轻男性转向修道生活；回应称教会历史上确实吸收过剩男性并赋予其体面目标。</li><li>另一种看法是机器人化的古建修复属于最安全的工作之一：历史需求积压、工作复杂且需要现场判断，而且历史每天都在增加。</li><li>也有人泼冷水，认为“经济独立且社会有价值的生活”并非不可得，问题常出在把标准定得不切实际。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">15</span><span class="rep-name">Agent SDK</span></div><div class="rep-meta">126 分 ｜ 124 评论 ｜ <span class="src">cursor.com</span></div><a class="repo-link" href="https://cursor.com/blog/agent-sdk">https://cursor.com/blog/agent-sdk</a><p class="rep-sum">Cursor 发布 Agent SDK，让开发者把 Cursor 的 agent 能力集成进自己的应用。原文未取到，讨论几乎全是生态层面的怀疑：又一个新的 agent 框架，接口大同小异却各自绑定厂商；以及大量“工作流技巧”没有任何基准能证明比一句普通提示更有效。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论希望出现 OpenResponses 这类标准，避免把应用绑死在单一供应商上，毕竟 OpenAI 的 Agent API 与 Anthropic 的 Agent SDK 功能高度重叠。</li><li>多人抱怨 LLM 生态正变成 JS 生态：每天一个新工具，上周的已经过时，本质是把消费主义套在软件上。</li><li>关于 planner/reviewer/tester 多 agent 框架，有人质疑所谓性能提升可能只是给一个任务分配了三倍上下文，且没人给出可复现的度量。</li></ul></div>
+
+<div class="foot">共 15 条链接，取到原文 7 条，收录评论 120 条。<br>
+本日报由 Ember 自动生成，摘要与评论要点由 AI 综合原文与讨论生成，仅供参考。</div>
+
+</main>
+</body>
+</html>
