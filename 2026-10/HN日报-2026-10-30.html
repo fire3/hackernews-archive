@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Hacker News 日报</title>
+<style>
+  :root{
+    --accent:#ff6600; --ink:#111827; --body:#374151; --muted:#6b7280;
+    --line:#e7e5e4; --bg:#f7f6f4; --card:#ffffff; --thead:#f6f4f1; --chip:#f1f5f9;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --ink:#f1f5f9; --body:#cbd5e1; --muted:#94a3b8;
+      --line:#2b3441; --bg:#0e131a; --card:#151c26; --thead:#1c2531; --chip:#1c2531; }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--body);
+    font:16px/1.8 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Droid Sans Fallback",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; padding-bottom:40px}
+  .wrap{max-width:1040px; margin:0 auto; padding:0 16px}
+
+  .hero{background:var(--accent); color:#fff; padding:30px 0 24px; border-radius:0 0 18px 18px}
+  .hero .wrap{padding:0 20px}
+  .kick{font-size:12px; letter-spacing:.22em; text-transform:uppercase; opacity:.85}
+  .hero h1{margin:.2em 0 .12em; font-size:clamp(24px,4.8vw,36px); line-height:1.25}
+  .hero .date{font-size:13.5px; opacity:.92}
+  .hero .sub{font-size:14px; opacity:.9; margin-top:4px}
+  .stats{display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:12px; font-size:13px}
+  .stats span{background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.24);
+    border-radius:999px; padding:3px 11px}
+
+  h2{font-size:19px; color:var(--accent); margin:30px 0 10px; padding-left:11px;
+    border-left:5px solid var(--accent); line-height:1.4}
+  h3{font-size:15.5px; color:var(--ink); margin:16px 0 6px}
+  p{margin:.55em 0}
+  a{color:var(--accent)}
+
+  .tw{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:8px 0 10px;
+    border:1px solid var(--line); border-radius:10px}
+  .tw table{margin:0; border:0}
+  table{border-collapse:collapse; width:100%; font-size:15px; background:var(--card)}
+  th,td{border-bottom:1px solid var(--line); padding:8px 11px; text-align:left}
+  th{background:var(--thead); color:var(--ink); font-weight:700; font-size:13.5px}
+  tr:last-child td{border-bottom:0}
+
+  footer{margin-top:26px; padding-top:14px; border-top:1px solid var(--line);
+    font-size:12.5px; color:var(--muted); line-height:1.8}
+  .foot{margin:0}
+
+  @media (min-width:900px){ h2{margin-top:34px} }
+  @media print{
+    body{background:#fff; padding:0; font-size:10.5pt}
+    .hero{background:#fff; color:#000; border-radius:0; border-bottom:2px solid var(--accent); padding:0 0 8px}
+    .stats span{border:1px solid #999}
+    .tw{overflow:visible}
+    h2{break-after:avoid}
+  }
+  
+  .headline{font-size:19px;line-height:1.6;font-weight:700;color:var(--ink);
+    background:rgba(255,102,0,.08);border-left:4px solid var(--accent);border-radius:8px;
+    padding:12px 14px;margin:6px 0}
+  ul.highlights{margin:.2em 0 .8em;padding-left:1.15em}
+  ul.highlights li{margin:.35em 0}
+  .overview{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;color:var(--body);margin:10px 0 16px}
+  .repo{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;margin:12px 0;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+  .rep-head{font-size:17px;font-weight:700;color:var(--ink);line-height:1.45}
+  .rank{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;
+    border-radius:50%;background:var(--accent);color:#fff;font-size:12.5px;margin-right:8px;vertical-align:1px}
+  .rep-meta{font-size:13px;color:var(--muted);margin:4px 0 2px}
+  .src{color:var(--muted)}
+  .repo-link{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 8px;
+    word-break:break-all;text-decoration:none}
+  .rep-sum{font-size:16px;line-height:1.85;color:var(--body);margin:.3em 0}
+  .cmt-ttl{font-size:14px;font-weight:700;color:var(--accent);margin:12px 0 4px}
+  .cmts{padding-left:1.2em;margin:.2em 0}
+  .cmts li{font-size:15px;line-height:1.75;margin:.3em 0}
+  .badge-repeat{font-size:11.5px;border:1px solid var(--line);border-radius:999px;
+    padding:0 8px;margin-left:6px;color:var(--muted);font-weight:400}
+  .foot{margin-top:24px;border-top:1px solid var(--line);padding-top:12px;
+    font-size:12.5px;color:var(--muted);line-height:1.8}
+  .na{color:#b6bcc5}
+
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="kick">HACKER NEWS · DAILY BRIEF</div>
+    <h1>Hacker News 日报</h1>
+    <div class="date">2026-10-30</div>
+    <div class="sub">币安失窃 56 亿美元，DoorDash 吞并 Instacart</div>
+    <div class="stats"><span>15 条链接</span><span>120 条评论</span><span>AI 中文小结</span></div>
+  </div>
+</header>
+<main class="wrap">
+
+<div class="hdr">
+
+
+
+<div style="font-size:16.1pt;font-weight:bold;color:#586069;margin-bottom:3px;">一句话概括</div>
+<div class="headline">币安失窃 56 亿美元，DoorDash 吞并 Instacart</div>
+<div style="font-size:16.1pt;font-weight:bold;color:#586069;margin-bottom:3px;">今日话题</div>
+<ul class="highlights"><li>币安约 56 亿美元资产被盗，Tether 与 Circle 冻结约 24 亿</li><li>DoorDash 以 170 亿美元收购 Instacart，溢价 26%</li><li>Mistral 开源 1 万亿参数 Large 4，主打编码与安全</li><li>Alphabet 搜索收入占比首次跌破一半，云增 103%</li><li>Patrick Stewart 逝世，HN 集体追忆 TNG 岁月</li></ul>
+<p class="overview">今天 HN 的主线是资本与权力的再分配：创纪录的加密盗窃、外卖行业大合并、AI 模型密集放榜。技术圈对 AI 的态度明显分裂，一边是 Mistral 开源万亿参数与 Gemini 登顶的兴奋，一边是对 LLM 腔调侵蚀写作与思考的警惕。IPv4 与 Google Earth 水域命名两条旧文，则把“谁掌握地址权与命名权”的老问题重新翻了出来。</p>
+
+<h2>热门链接与讨论</h2>
+</div>
+<div class="repo"><div class="rep-head"><span class="rank">1</span><span class="rep-name">币安被盗 56 亿美元：链上追踪与稳定币冻结</span></div><div class="rep-meta">1,353 分 ｜ 832 评论 ｜ <span class="src">arkm.com</span></div><a class="repo-link" href="https://arkm.com/explorer/entity/21a94755-f604-45e5-9501-6542e23005e8">https://arkm.com/explorer/entity/21a94755-f604-45e5-9501-6542e23005e8</a><p class="rep-sum">链上情报平台标记的 Binance-hacker-1029 实体页面成为当日最热链接，标题直指约 56 亿美元资产从币安被转出；原文抓取失败，细节主要来自讨论。评论引用 CZ 的推文称“看起来确实是币安被黑”，并感谢 Tether（约 9.71 亿美元）与 Circle（约 8.23 亿美元）的快速冻结。有评论统计已有约 24 亿美元被冻结，并解释稳定币合约内置 freeze 功能，转到新钱包也躲不掉；质疑者则担心资金早已分散、混币，冻结赶不上转移速度。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>CZ 推文确认“看起来确实是币安被黑”，并点名感谢 Tether 与 Circle 的快速冻结。</li><li>有人按链上记录逐笔统计，约 24 亿美元已被冻结，包括 9.7115 亿 USDT、8.23 亿 USDC 和 Tron 上的 3.1273 亿 USDT。</li><li>冻结原理并不神秘：USDT/USDC 合约自带冻结函数，发行方直接调用即可，换钱包也无济于事。</li><li>反对意见认为 56 亿美元体量难以快速变现，但资金一旦分散进大量地址并混币，冻结原始地址就晚了。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">2</span><span class="rep-name">DoorDash 将以 170 亿美元收购 Instacart</span></div><div class="rep-meta">467 分 ｜ 629 评论 ｜ 已读原文 ｜ <span class="src">about.doordash.com</span></div><a class="repo-link" href="https://about.doordash.com/en-us/news/doordash-to-acquire-instacart">https://about.doordash.com/en-us/news/doordash-to-acquire-instacart</a><p class="rep-sum">DoorDash 宣布以每股 65 美元、约 170 亿美元股权价值收购 Instacart，较 10 月 22 日收盘价溢价 26%，对价至少 75% 为现金，Instacart 董事会一致通过。官方叙事是让本地商家共享配送网络、杂货技术与广告和 AI 工具，对抗自建物流与会员体系的电商巨头。评论并不买账：有人感叹 ZIRP 时代一周一家外卖创业公司的盛况，有人直接放弃反垄断期待，也有人质疑合并后涨价，另有人反驳“以前餐馆根本不做外送”。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>ZIRP 时代外卖与电动滑板车创业公司遍地开花，如今只剩巨头之间的吞并。</li><li>有人直言反垄断已无从谈起，认为相关方早已打通关系；也有人认为两家服务并非不可替代，合并后大概率涨价。</li><li>关于“外卖平台毁掉旧生态”的说法出现分歧：一方说餐馆原本不提供外送，另一方说平台崛起确实挤掉了自营配送的岗位。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">3</span><span class="rep-name">Patrick Stewart 逝世</span></div><div class="rep-meta">2,983 分 ｜ 628 评论 ｜ <span class="src">www.nytimes.com</span></div><a class="repo-link" href="https://www.nytimes.com/2026/10/29/arts/television/patrick-stewart-dead.html">https://www.nytimes.com/2026/10/29/arts/television/patrick-stewart-dead.html</a><p class="rep-sum">《纽约时报》讣告链接，HN 以 2983 分、628 条评论集体悼念 Patrick Stewart。原文未抓取到，讨论集中在《星际迷航：下一代》的童年记忆、他在疫情封锁期间朗读莎士比亚十四行诗的举动，以及《Excalibur》和《American Dad!》里展示的另一面。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>多位评论者说《星际迷航：下一代》塑造了自己的性格，他的离去像童年好友去世。</li><li>疫情封锁初期他自发录制朗读莎士比亚十四行诗的短片，被认为是社交媒体上难得的清流。</li><li>除了 Picard，人们也怀念他在《Excalibur》（1981）里的表演和在《American Dad!》里玩票的幽默。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">4</span><span class="rep-name">如果 IPv4 地址是一块土地</span></div><div class="rep-meta">286 分 ｜ 402 评论 ｜ <span class="src">iptrust.co</span></div><a class="repo-link" href="https://iptrust.co/blog/if-ipv4-were-land">https://iptrust.co/blog/if-ipv4-were-land</a><p class="rep-sum">文章把全球约 1.35 亿平方公里陆地（不含南极）与 36 亿个可定位 IPv4 地址对应起来，按各国地址份额而非国土面积重新画地图。评论先拿荷兰开玩笑，说它又从海里抢到了大量地址块，随后转向对 IPv4 迟迟无法退场的争论。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>荷兰被调侃“填海造陆”换来大量地址块，评论也顺带提到该国是数据中心选址热门地。</li><li>有人质疑表格里朝鲜、格陵兰等比刚果民主共和国更“吃亏”，被指出表格只收录 IPv4 地址超过 10 万且国土超过 2 万平方公里的国家。</li><li>核心分歧在于 IPv4 未废弃是行业失败还是向后兼容的必然：一方说地址囤积者没有动力支持 IPv6，另一方说协议升级本就离不开双栈共存。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">5</span><span class="rep-name">FBI 寄给马丁·路德·金的“你完了”信（2014）</span></div><div class="rep-meta">425 分 ｜ 397 评论 ｜ <span class="src">www.nytimes.com</span></div><a class="repo-link" href="https://www.nytimes.com/2014/11/16/magazine/what-an-uncensored-letter-to-mlk-reveals.html">https://www.nytimes.com/2014/11/16/magazine/what-an-uncensored-letter-to-mlk-reveals.html</a><p class="rep-sum">2014 年《纽约时报》杂志文章，围绕 FBI 寄给马丁·路德·金的那封匿名信，信中带有赤裸的威胁与侮辱。原文未抓取到，评论补充了维基百科条目，以及 1971 年“调查 FBI 公民委员会”潜入宾州 Media 镇办公室、窃取文件并曝光 COINTELPRO 的经过。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>评论补充：这封信的作者身份之所以曝光，源于 1971 年活动人士盗窃 FBI 地方办公室文件，COINTELPRO 由此进入公众视野。</li><li>有人读后认为这封信的语气与今天的网络仇恨评论几乎一样，说明骚扰手法几十年未变。</li><li>也有人把矛头指向政府保密本身，认为公民在信息不对称下只剩体制外手段；另一条评论则把 COINTELPRO 与“知更鸟行动”并置，批评主流媒体的共谋。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">6</span><span class="rep-name">Mistral 开源 Mistral Large 4 权重</span></div><div class="rep-meta">1,466 分 ｜ 396 评论 ｜ 已读原文 ｜ <span class="src">mistral.ai</span></div><a class="repo-link" href="https://mistral.ai/news/mistral-large-4-oss/">https://mistral.ai/news/mistral-large-4-oss/</a><p class="rep-sum">Mistral 放出 Mistral Large 4（Le Chonk）权重：1 万亿参数、原生多模态，公开预览后仅三周强化学习就把 FrontierCode 2.0 做到 19.7%，Terminal-Bench 4.0 提升 13 个百分点到 41%，AA 编码智能体指数 48% 与 GLM-5.3 基本持平但每任务少用 47% token。模型提供三档推理模式，训练全程在欧洲基础设施完成，主打“主权 AI”。评论关心的是能否本地跑：最低量化仍需约 256GB 显存，有人自嘲 16GB M1 Pro 只能围观，也有人晒出 2.5 万美元、8 张显卡的自建机才勉强够格。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>HuggingFace 权重链接被埋在文章末尾，原版与 NVFP4 版本都已上传。</li><li>Unsloth 当天就放出量化版，但最低配置仍要 256GB 显存；有人算过自己那台 8 卡、2.5 万美元的自建机才够跑。</li><li>有评论认为这类万亿参数模型基本与消费级硬件无缘，另一人则感叹自己 16GB 统一内存的 M1 Pro 连门槛都摸不到。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">7</span><span class="rep-name">我去墨西哥试驾美国人买不到的车</span></div><div class="rep-meta">303 分 ｜ 352 评论 ｜ <span class="src">www.washingtonpost.com</span></div><a class="repo-link" href="https://www.washingtonpost.com/climate-environment/2026/10/27/i-saw-future-driving-mexico-its-off-limits-americans/">https://www.washingtonpost.com/climate-environment/2026/10/27/i-saw-future-driving-mexico-its-off-limits-americans/</a><p class="rep-sum">《华盛顿邮报》记者赴墨西哥试驾美国市场买不到的中国电动车，原文被订阅墙挡住，讨论转向实际体验。多位评论者在墨西哥、南非见到或拥有 BYD：当地 Uber 大量使用中国电动车，南非车主称高油价让入门电动车很快回本，他的 Sealion 5 插混跑了 4500 公里油箱还剩一半，但遇到过泊车雷达提示卡死和无线 CarPlay 连不上两次小软件故障。也有提醒：插混长期不用油要注意 E10 汽油老化，三菱等厂商会强制要求定期补充燃油。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>在墨西哥打 Uber 的人说，大约一半车辆是中国电动车，BYD 的能见度超出预期。</li><li>南非车主报告 Sealion 5 插混 4500 公里只用了不到半箱油，但遇到两次软件小故障，重启后自愈。</li><li>有评论提醒插混车主别让汽油在油箱里放太久，E10 会老化；三菱的做法是强制补充至少 20 升新油才允许纯电行驶。</li><li>多条评论抱怨《华盛顿邮报》订阅墙，建议用标题搜索替代来源。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">8</span><span class="rep-name">Google 搜索收入首次不到 Alphabet 的一半</span></div><div class="rep-meta">414 分 ｜ 344 评论 ｜ 已读原文 ｜ <span class="src">www.kadoa.com</span></div><a class="repo-link" href="https://www.kadoa.com/companies/insights/google-search-below-half">https://www.kadoa.com/companies/insights/google-search-below-half</a><p class="rep-sum">2026 年 9 月季度，Google 搜索收入 634 亿美元，占 Alphabet 总收入 1280 亿美元的 49.7%，是分拆披露以来首次跌破一半；此前 31 个季度该比例一直在 52.8% 到 62.0% 之间。搜索本身仍同比增长 12%，占比下降是因为云业务增长 103%，其收入占比从 4.4% 升到 24.1%。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人认为这是收入多元化的好消息，说明 Alphabet 不必再把命运押在搜索广告上。</li><li>反方称 Google 自研的成功产品只有搜索和 Gmail，云没有真正护城河，担心它步 IBM、AOL 的后尘变成“老公司”。</li><li>为 YouTube 辩护的评论指出，Google 收购后靠自有骨干网和部署在运营商内的缓存节点才让视频业务跑通经济模型。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">9</span><span class="rep-name">LLM 腔调</span></div><div class="rep-meta">478 分 ｜ 253 评论 ｜ 已读原文 ｜ <span class="src">martinfowler.com</span></div><a class="repo-link" href="https://martinfowler.com/bliki/LLM-Voice.html">https://martinfowler.com/bliki/LLM-Voice.html</a><p class="rep-sum">Martin Fowler 提出“LLM Voice”：读到 LLM 生成文字时那种说不清的不适，像散文的恐怖谷；他认为检测工具抓错了重点，因为读者的反应已经发生。他强烈建议不要让 LLM 写初稿，哪怕人工润色也很难清除腔调；写作是思考工具，把写作外包出去等于把理解也外包。他也留了例外：帕金森病患者可借 LLM 继续写作，翻译场景的容忍度也更高。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人发现自己天天读 LLM 输出后，写作风格被反向同化，即使不用模型也写出“LLM 味”。</li><li>一条高赞估算称十亿人每天写约 0.5 万亿 token、读约 2 万亿 token，人类语言正在被 AI 语言重新塑造。</li><li>反对“必须亲手写”的评论用饮食作类比：对有些人是艺术，对另一些人只是燃料，用 LLM 与独立思考并非二选一。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">10</span><span class="rep-name">Gemini 4 Carbon 登顶 Artificial Analysis 智能指数 v5</span></div><div class="rep-meta">336 分 ｜ 242 评论 ｜ 已读原文 ｜ <span class="src">artificialanalysis.ai</span></div><a class="repo-link" href="https://artificialanalysis.ai/articles/gemini-4-carbon-new-number-1">https://artificialanalysis.ai/articles/gemini-4-carbon-new-number-1</a><p class="rep-sum">Artificial Analysis 新版智能指数 v5 中，Gemini 4 Carbon 以 59 分登顶，9 项评测里 4 项第一，包括 HLE-Diamond、Terminal-Bench-Science 与 AA-Omniscience。它在编码智能体指数上得 59 分，仅落后 Claude Opus 5.5 三分；每任务成本 7.76 美元，比 Opus 5.5 低约 23%，输出 token 少 29%；幻觉率从 4% 升到 11%，仍是第二低。模型支持 1M 上下文，标准价每百万 token 4/20 美元，目前仅向部分用户开放并打五折。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有用户认为 Gemini 一直被低估，做学习型检索和知识补缺比 Claude 顺手，自己使用频率更高。</li><li>订阅用户反驳“贵而无用”的说法，称 20 美元档每周约有 120 分钟高强度思考额度，实际项目用不完。</li><li>一位评论者举例：亲戚所在的大型抵押贷款公司整套工作流都用 Gemini，处理多份文档时能找出遗漏案例。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">11</span><span class="rep-name">被指中国间谍者与黄仁勋“关系密切”</span></div><div class="rep-meta">326 分 ｜ 224 评论 ｜ <span class="src">nypost.com</span></div><a class="repo-link" href="https://nypost.com/2026/10/29/business/alleged-chinese-spy-had-close-relationship-with-nvidia-boss-jensen-huang-report/">https://nypost.com/2026/10/29/business/alleged-chinese-spy-had-close-relationship-with-nvidia-boss-jensen-huang-report/</a><p class="rep-sum">《纽约邮报》报道称，一名被指为中国间谍的人士与 Nvidia CEO 黄仁勋有“密切关系”；原文未抓取到，讨论集中在情报战与人才流动。有评论直言，如果自己是中方情报机构，黄仁勋正是最该经营的关系；也有人认为任何像样的情报机构都会在关键人物周围布人。更激烈的争论围绕美国对中国公民的开放程度，以及“人才流失”是否真能解释中国的技术积累，反对方强调中国的人口基数与内部发展不均衡。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人讽刺这正是情报机构梦寐以求的关系，另有评论补刀：连关键人物身边都没人，才是不合格的情报机构。</li><li>一派认为美国对中国公民过于开放，经济收益抵不过安全风险；另一派反驳说中国成功部分来自庞大人口中的人才分布，而非某种集体智商优势。</li><li>关于中国经济真实状况的讨论没有结论，有人指出外部很难看清，这本身就说明信息不透明。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">12</span><span class="rep-name">美国三个月新增 20.2 GWh 电池储能，创纪录</span></div><div class="rep-meta">275 分 ｜ 199 评论 ｜ 已读原文 ｜ <span class="src">electrek.co</span></div><a class="repo-link" href="https://electrek.co/2026/08/31/the-us-added-a-record-20-2-gwh-of-battery-storage-in-just-3-months/">https://electrek.co/2026/08/31/the-us-added-a-record-20-2-gwh-of-battery-storage-in-just-3-months/</a><p class="rep-sum">美国 2026 年第二季度新增 20.2 GWh 电池储能，创单季纪录，上半年累计 30.8 GWh、同比增长 23%；其中公用事业级约 18 GWh，亚利桑那单季 6.2 GWh 创州纪录，德州 3.8 GWh、加州 3.6 GWh，44% 的公用事业级项目与光伏配套。户用储能反而下滑 27% 至 657 MWh，报告归因于 25D 联邦税收抵免取消与 2025 年的抢装。Benchmark 把 2030 年预测上调 11.5% 至 683 GWh。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人做了换算：全美电网装机约 1250 GW、平均用电 500 GW，现有约 200 GWh 储能只够 25 分钟平均需求，成绩亮眼但规模仍小。</li><li>针对“是否漏算数据中心自建储能”的疑问，有评论核对 SEIA 报告后确认统计包含数据中心配套。</li><li>也有评论指出电池成本已降到历史低点，这条路大多数国家都会走。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">13</span><span class="rep-name">Google 如何决定 Google Earth 中水域的名称（2008）</span></div><div class="rep-meta">233 分 ｜ 184 评论 ｜ <span class="src">publicpolicy.googleblog.com</span></div><a class="repo-link" href="https://publicpolicy.googleblog.com/2008/04/how-google-determines-names-for-bodies.html">https://publicpolicy.googleblog.com/2008/04/how-google-determines-names-for-bodies.html</a><p class="rep-sum">2008 年 Google 公共政策博客的旧文，解释 Google Earth 如何为水域选择显示名称；原文未抓取到。评论引用文中关键政策：若不同国家对该水域名称有争议，就同时显示两个名称，并让每个标签更靠近使用它的国家。讨论随即转向现实：有人调侃墨西哥湾改名，有人反驳改名算不上“邪恶”，更多人争论地图究竟该显示所有名称还是只显示本地常用名。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>评论引用原文：存在命名争议时同时显示两个名称，并各自靠近使用该名称的国家，有人感叹这条政策如今已变。</li><li>关于 Google 是否“变坏”出现分歧：一方拿改名事件佐证，另一方认为改名只是烦人，与真正的恶行不在一个量级。</li><li>实际使用层面也有人反对并列显示，认为地图应只呈现用户所在地区的常用名，否则导航和问路都会混乱。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">14</span><span class="rep-name">PHP2Shell 漏洞链攻陷 25 台服务器，含美国政府系统</span></div><div class="rep-meta">314 分 ｜ 154 评论 ｜ 已读原文 ｜ <span class="src">dreamgroup.com</span></div><a class="repo-link" href="https://dreamgroup.com/blog/chained-php2shell-exploit-roots-25-servers">https://dreamgroup.com/blog/chained-php2shell-exploit-roots-25-servers</a><p class="rep-sum">Dream 研究团队发现一起疑似中国 AI 辅助的攻击行动：把 PHP2Shell（CVE-2026-109618/109619）与 Fragnesia 内核提权（CVE-2026-46300）串成单个无需凭据的 HTTP 请求，直接 root 暴露在公网的 PAN-OS 防火墙。共 25 台服务器在美国、日本、台湾、韩国被攻陷，其中包括美国政府相关环境，得手后转向 Active Directory 做凭据窃取与目录枚举；Palo Alto 的 Unit 42 已独立验证并发布修复版本。现场留有 Claude Code、接入 DeepSeek 与 Kimi 的 aiscan 平台和 FOFA API key，约 40 个后渗透脚本风格高度一致，研究团队判断疑似 AI 辅助开发，但不像完全自主的国家级行动。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>此前质疑漏洞被夸大的人公开认错，承认“任何暴露在公网的 PHP 服务都能无凭据 RCE”被低估了。</li><li>支持严重性的一方强调，漏洞在 PHP 请求解析阶段触发，跑在业务代码之前，写多安全的代码都挡不住。</li><li>怀疑者则拿早前“公开私钥求盗”的实验说事，认为很久没人拿走比特币说明实际不可利用；反驳者指出那台机器当时并未正确提供 PHP 页面。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">15</span><span class="rep-name">H.264 是魔法（2016）</span></div><div class="rep-meta">434 分 ｜ 149 评论 ｜ 已读原文 ｜ <span class="src">sidbala.com</span></div><a class="repo-link" href="https://sidbala.com/h-264-is-magic/">https://sidbala.com/h-264-is-magic/</a><p class="rep-sum">一篇 2016 年的经典科普：1080p60 原始视频约 370 MB/s，H.264 靠有损压缩、丢弃人眼不敏感的细节和熵编码把它压到可传输。文中例子很直观：同一网页的 300 帧 H.264 视频只有 175KB，而单帧 PNG 截图就有 1015KB。十年后评论区自然转向 AV1 与 AV2：有人说 AV1 已主流，有人以 Nvidia Shield 和 Roku 仅 Ultra 支持为例，认为它离普及还差硬件。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>十年后大家已经在讨论 AV1 的实时通信落地和下一代 AV2，有人感叹硬件支持总要多等几年。</li><li>关于 AV1 是否主流出现分歧：一方举 Nvidia Shield 不支持为例，另一方指出 Shield 硬件已七年未更新，且 Roku、Amazon 占据更大份额。</li><li>反驳者补充，Roku 只有 Ultra 支持 AV1 且限于 DASH，这反而说明 AV1 的覆盖远没有想象中广。</li></ul></div>
+
+<div class="foot">共 15 条链接，取到原文 8 条，收录评论 120 条。<br>
+本日报由 Ember 自动生成，摘要与评论要点由 AI 综合原文与讨论生成，仅供参考。</div>
+
+</main>
+</body>
+</html>
