@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Hacker News 日报</title>
+<style>
+  :root{
+    --accent:#ff6600; --ink:#111827; --body:#374151; --muted:#6b7280;
+    --line:#e7e5e4; --bg:#f7f6f4; --card:#ffffff; --thead:#f6f4f1; --chip:#f1f5f9;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --ink:#f1f5f9; --body:#cbd5e1; --muted:#94a3b8;
+      --line:#2b3441; --bg:#0e131a; --card:#151c26; --thead:#1c2531; --chip:#1c2531; }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--body);
+    font:16px/1.8 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Droid Sans Fallback",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; padding-bottom:40px}
+  .wrap{max-width:1040px; margin:0 auto; padding:0 16px}
+
+  .hero{background:var(--accent); color:#fff; padding:30px 0 24px; border-radius:0 0 18px 18px}
+  .hero .wrap{padding:0 20px}
+  .kick{font-size:12px; letter-spacing:.22em; text-transform:uppercase; opacity:.85}
+  .hero h1{margin:.2em 0 .12em; font-size:clamp(24px,4.8vw,36px); line-height:1.25}
+  .hero .date{font-size:13.5px; opacity:.92}
+  .hero .sub{font-size:14px; opacity:.9; margin-top:4px}
+  .stats{display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:12px; font-size:13px}
+  .stats span{background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.24);
+    border-radius:999px; padding:3px 11px}
+
+  h2{font-size:19px; color:var(--accent); margin:30px 0 10px; padding-left:11px;
+    border-left:5px solid var(--accent); line-height:1.4}
+  h3{font-size:15.5px; color:var(--ink); margin:16px 0 6px}
+  p{margin:.55em 0}
+  a{color:var(--accent)}
+
+  .tw{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:8px 0 10px;
+    border:1px solid var(--line); border-radius:10px}
+  .tw table{margin:0; border:0}
+  table{border-collapse:collapse; width:100%; font-size:15px; background:var(--card)}
+  th,td{border-bottom:1px solid var(--line); padding:8px 11px; text-align:left}
+  th{background:var(--thead); color:var(--ink); font-weight:700; font-size:13.5px}
+  tr:last-child td{border-bottom:0}
+
+  footer{margin-top:26px; padding-top:14px; border-top:1px solid var(--line);
+    font-size:12.5px; color:var(--muted); line-height:1.8}
+  .foot{margin:0}
+
+  @media (min-width:900px){ h2{margin-top:34px} }
+  @media print{
+    body{background:#fff; padding:0; font-size:10.5pt}
+    .hero{background:#fff; color:#000; border-radius:0; border-bottom:2px solid var(--accent); padding:0 0 8px}
+    .stats span{border:1px solid #999}
+    .tw{overflow:visible}
+    h2{break-after:avoid}
+  }
+  
+  .headline{font-size:19px;line-height:1.6;font-weight:700;color:var(--ink);
+    background:rgba(255,102,0,.08);border-left:4px solid var(--accent);border-radius:8px;
+    padding:12px 14px;margin:6px 0}
+  ul.highlights{margin:.2em 0 .8em;padding-left:1.15em}
+  ul.highlights li{margin:.35em 0}
+  .overview{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;color:var(--body);margin:10px 0 16px}
+  .repo{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;margin:12px 0;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+  .rep-head{font-size:17px;font-weight:700;color:var(--ink);line-height:1.45}
+  .rank{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;
+    border-radius:50%;background:var(--accent);color:#fff;font-size:12.5px;margin-right:8px;vertical-align:1px}
+  .rep-meta{font-size:13px;color:var(--muted);margin:4px 0 2px}
+  .src{color:var(--muted)}
+  .repo-link{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 8px;
+    word-break:break-all;text-decoration:none}
+  .rep-sum{font-size:16px;line-height:1.85;color:var(--body);margin:.3em 0}
+  .cmt-ttl{font-size:14px;font-weight:700;color:var(--accent);margin:12px 0 4px}
+  .cmts{padding-left:1.2em;margin:.2em 0}
+  .cmts li{font-size:15px;line-height:1.75;margin:.3em 0}
+  .badge-repeat{font-size:11.5px;border:1px solid var(--line);border-radius:999px;
+    padding:0 8px;margin-left:6px;color:var(--muted);font-weight:400}
+  .foot{margin-top:24px;border-top:1px solid var(--line);padding-top:12px;
+    font-size:12.5px;color:var(--muted);line-height:1.8}
+  .na{color:#b6bcc5}
+
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="kick">HACKER NEWS · DAILY BRIEF</div>
+    <h1>Hacker News 日报</h1>
+    <div class="date">2026-11-01</div>
+    <div class="sub">AI 既能一夜造站也能被拿来作恶，安全债集中到期</div>
+    <div class="stats"><span>15 条链接</span><span>120 条评论</span><span>AI 中文小结</span></div>
+  </div>
+</header>
+<main class="wrap">
+
+<div class="hdr">
+
+
+
+<div style="font-size:16.1pt;font-weight:bold;color:#586069;margin-bottom:3px;">一句话概括</div>
+<div class="headline">AI 既能一夜造站也能被拿来作恶，安全债集中到期</div>
+<div style="font-size:16.1pt;font-weight:bold;color:#586069;margin-bottom:3px;">今日话题</div>
+<ul class="highlights"><li>Karpathy 用 Opus 5.5 两小时造出 HN 版 YouTube，收录 6454 个视频</li><li>Linux TCP 握手漏洞 CVSS 9.8，Ubuntu 与 RHEL 仍未发布修复</li><li>Anthropic 封禁触碰模型训练的用户，被指反蒸馏双重标准</li><li>ChatGPT 分享链接可被注入脚本接管账号，OpenAI 已按 P1 修复</li><li>英国绿党放弃反对核能；Jepsen 在 ParticleDB 挖出 96 个问题</li></ul>
+<p class="overview">今天 HN 的主线是 AI 的两副面孔：一边是 Karpathy 用它两小时造出整个网站、模型自动通关 Factorio，另一边是木马拿 LLM 给受害者资产估值、研究者用一条分享链接接管 ChatGPT 账号。安全是第二主题，Linux TCP 高危漏洞在各发行版间的修补落差让运维集体焦虑，Jepsen 对 AI 数据库的 96 项指控则延续了社区对「宣称即事实」的不信任。争论集中在责任与边界：Anthropic 该不该封禁做训练研究的付费用户、人行道该不该让给机器人、核能是否还算绿色选项，共识少而火药味足。</p>
+
+<h2>热门链接与讨论</h2>
+</div>
+<div class="repo"><div class="rep-head"><span class="rank">1</span><span class="rep-name">塞尔维亚选出了「世界上最聪明的议会」</span></div><div class="rep-meta">858 分 ｜ 483 评论 ｜ <span class="src">www.science.org</span></div><a class="repo-link" href="https://www.science.org/content/article/serbia-just-elected-world-s-brainiest-parliament">https://www.science.org/content/article/serbia-just-elected-world-s-brainiest-parliament</a><p class="rep-sum">这条 science.org 报道称塞尔维亚新一届议会的学历构成在全球居首，但原文未抓取成功，具体数据无法核实。HN 上 483 条评论几乎全部转向一个老问题：由专家而非职业政客执政的技术官僚制，究竟更清廉还是更腐败。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有用户坦言自己曾坚信技术官僚政府优于职业政客，但读到技术官僚政权腐败程度反而高于平均后就动摇了，只是记不起出处。</li><li>多人拿新加坡当反例：长期被视为技术官僚/精英治理的样板，同时也是国际清廉排名最靠前的国家之一。</li><li>反驳者指出新加坡是威权体制，比较不成立；也有人补充其部长与总理薪酬极高（总理年薪约 300 万），高薪与绩效挂钩是低腐败的一部分。</li><li>一条折中观点认为，低腐败可能是技术官僚治理成功的前提而非结果，因为技术官僚制高度依赖对专家的信任。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">2</span><span class="rep-name">HackerTube：用 HN 网友推荐的视频搭一个 YouTube</span></div><div class="rep-meta">1,304 分 ｜ 367 评论 ｜ 已读原文 ｜ <span class="src">karpathy.bearblog.dev</span></div><a class="repo-link" href="https://karpathy.bearblog.dev/hacker-tube/">https://karpathy.bearblog.dev/hacker-tube/</a><p class="rep-sum">Karpathy 周五深夜被 YouTube 推荐流恶心到，第二天上午让 Opus 5.5 抓取全部 HN 评论、筛出约 4 万条推荐 YouTube 视频的评论，去重后得到 2007 至 2026 年间的 6454 个视频、覆盖 150 个主题，套上 YouTube 界面部署到 VPS，取名 hackertube.org。站点用 50% 处的画面而非上传缩略图，无需账号、状态存在本地浏览器，数据可导出交给 agent 复刻。他强调自己已不做传统工程，只跟 Claude 对话，人工部分只有申请 Google API key、开 VPS、买域名三步。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>Karpathy 自己贴出账目：504M 输入 token（90% 命中缓存）、7.6M 输出 token，其中九成以上是给评论打标签的 Sonnet 调用，真正写应用和部署只花约 1M Opus 5.5 token。</li><li>有人估算按 API 价格约 250 至 300 美元，但多数人认为订阅制下实际成本远低于此，20 美元月费也能做很多次。</li><li>多位评论者推荐更便宜的替代模型，有人用 GLM 5.3 Flash 花约 4 美分完成迁移并加固一台老服务器，不过也有人坚持 Sonnet 在同类任务上仍更强。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">3</span><span class="rep-name">英国绿党放弃长期反对核能的立场</span></div><div class="rep-meta">212 分 ｜ 259 评论 ｜ 已读原文 ｜ <span class="src">www.theguardian.com</span></div><a class="repo-link" href="https://www.theguardian.com/politics/2026/oct/05/green-party-nuclear-power-policy">https://www.theguardian.com/politics/2026/oct/05/green-party-nuclear-power-policy</a><p class="rep-sum">英格兰和威尔士绿党在党代会上通过动议，删去「全面反对核裂变」的承诺，改为把核电与其他低碳技术放在一起评估，发电政策仍以海上风电、陆上风电和屋顶光伏为主，但允许议员对具体新建核电项目逐案表态。绿党议员 Carla Denyer 称这承认了核电在过渡期仍有角色，若她当能源大臣会优先延寿现役核电站，而对新项目要审慎核算成本、速度与环境影响，这与她 2023 年称核电「极慢极贵」的口径已有明显变化。核能与反核武的历史渊源是旧立场根源，党内 Greens for Nuclear 联合创始人称气候危机已到「有什么招都上」的阶段，而顾问 Andrew Stirling 直斥该动议「完全不理性」。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>支持者认为反核是绿党及其他政党最短视的立场之一，若各国走法国路线，过去五十年的能源局面会好得多。</li><li>反对者强调核电今天是成本最高的发电方式，即使放宽安全监管也难与每瓦约 0.1 美元的太阳能竞争，储能成本也填不平差价。</li><li>有人以法国约 7 欧分/千瓦时的核电成本反驳，并指出没有任何工业化经济体仅靠可再生能源满足新增电力需求。</li><li>还有评论指出核电真正擅长替代的是天然气发电，而后者的部分成本并未计入电价。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">4</span><span class="rep-name">Linux IPv4 TCP 释放后使用漏洞：CVE-2026-98432，CVSS 9.8</span></div><div class="rep-meta">504 分 ｜ 234 评论 ｜ 已读原文 ｜ <span class="src">atlasum.net</span></div><a class="repo-link" href="https://atlasum.net/blog/cve-2026-98432-linux-ipv4-tcp-uaf">https://atlasum.net/blog/cve-2026-98432-linux-ipv4-tcp-uaf</a><p class="rep-sum">Linux 稳定内核在 10 月 11 日和 15 日修复了 CVE-2026-98432：IPv4 TCP 握手在处理连接方 IP 选项时，把 request socket 保存的选项直接交给新连接而未复制，连接释放后另一 CPU 仍可能读取，构成可被远程未认证peer 触发的释放后使用。问题可回溯到 4.4，上游修复只是把两处 kfree 改成 kfree_rcu 的四行改动。Anthropic 报告该漏洞，并称其 Claude 模型写出了可在带 multipath TCP 监听器的服务器上以 root 执行命令的 PoC，Go 程序默认就会打开这类监听器。截至 10 月 31 日，Ubuntu 各版本仍标为「Vulnerable」且未发安全公告，RHEL 8/9/10 标为受影响无修复，AlmaLinux 反而先在测试仓库给出修复内核。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论推测漏洞利用需要多核，因此大量永不复核更新的单核消费级路由器反而幸免，不过也有人指出这些设备本就背着二十个未修补的高危漏洞。</li><li>实际运维者提醒：路由器固件多停在 5.10/5.15 等老 LTS 的旧补丁级别，连最新 OpenWrt 25.12.6（内核 6.12.112）也在受影响范围。</li><li>用 sysctl 关闭 MPTCP 只能算临时缓解，重启后必须重新执行；根本办法是升级内核并重启。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">5</span><span class="rep-name">Anthropic 封禁一切触及「训练更大模型」的用户</span></div><div class="rep-meta">350 分 ｜ 205 评论 ｜ 已读原文 ｜ <span class="src">twitter.com</span></div><a class="repo-link" href="https://twitter.com/jiahaoshao1/status/2116475922190922088">https://twitter.com/jiahaoshao1/status/2116475922190922088</a><p class="rep-sum">研究者 Jiahao Shao 公开指责 Anthropic：他并未蒸馏 Claude，rollout 来自一个强开源模型，Claude 只负责提交任务和跑分析，却被打上「训练竞争对手」标签，此后任何涉及 RFT、SFT 或训练更大模型的对话都会导致被封号、Opus 5.5 被降级为 Opus 5，或会话直接中断。他认为这是双重标准：模型训练于开放网络上的书籍、代码与论坛，却禁止他人规模化学习其输出。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人指出该用户位于香港，Claude 在当地本就不可用，很可能是通过 VPN 访问，而用 VPN 做模型训练在分类器看来是高度可疑信号。</li><li>一名在美国和欧洲之间往返的用户反驳这并非地理问题：只要涉及修改既有权重或接近前沿的训练方法，同样会被限制。</li><li>也有人替 Anthropic 说话，称其曾在一段时间里故意在被问到较深的训练问题时给出错误答案，后来几天内撤回，但已让人不敢在重要任务上依赖它。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">6</span><span class="rep-name">Signal 分支 Molly 三个月未更新，存在已知漏洞</span></div><div class="rep-meta">321 分 ｜ 184 评论 ｜ 已读原文 ｜ <span class="src">piefed.world</span></div><a class="repo-link" href="https://piefed.world/post/1503394">https://piefed.world/post/1503394</a><p class="rep-sum">这篇 piefed 帖子指出，注重隐私的 Signal 分支 Molly 最新版本仍是 7 月 31 日发布的 v8.19.2-4，缺少主线 Signal 已修复的若干漏洞，例如 10 月披露的那个 exploit 在 Signal 8.27.1 中已修补，而 Molly 依旧受影响。作者建议在 Molly 恢复及时更新之前改用官方 Signal，甚至删除 Molly。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人澄清官方 APK 并非完全不更新：Signal 会发通知提示升级，往往比 Play 商店还早，用户只需点开完成安装。</li><li>多位用户反馈该通知的更新按钮经常无效，每次都得重新下载 APK；在 GrapheneOS 上还要额外授予安装应用权限。</li><li>有评论提到官方 Signal 已支持一个账号绑定第二台设备（iPhone 可作为次要设备），而这正是过去选择 Molly 的主要理由之一。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">7</span><span class="rep-name">GPT-5.6 Sol 能在和平模式下通关 Factorio</span></div><div class="rep-meta">171 分 ｜ 183 评论 ｜ 已读原文 ｜ <span class="src">ryanmadden.net</span></div><a class="repo-link" href="https://ryanmadden.net/gpt-56-beats-factorio/">https://ryanmadden.net/gpt-56-beats-factorio/</a><p class="rep-sum">作者让 GPT-5.6 Sol 在 Codex 中以低思考等级运行，用 Python 游戏管理库以程序化方式操作，同时强制玩家伸手距离与战争迷雾等限制，最终用 13.5 小时游戏时间完成和平模式（无敌方虫群）通关并发射火箭。Sol 在部分环节超出预期，但后期暴露出连接生产系统的失败，靠反复在区域间搬运物资「手动」补锅才凑齐发射条件；相比此前连传送带都不会用的 GPT-5.5 已是明显进步。作者认为 Factorio 这类可观察性强的游戏适合用来建立对模型能力本质的直觉。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人打趣这种来回搬运就是人类玩家干的事；也有人认为问题出在 Factorio 的隐藏信息，玩家开局无法预知后期需要多少铜矿与绿电路产能。</li><li>反驳者指出游戏信息其实基本都可见，产出速率在界面里就有，配比也能算，只是需要 wiki 或攻略才能少走弯路。</li><li>一条解释较有共鸣：早期配方偏铁，等到火箭与空间平台阶段才意识到基础设施规模，导致大量返工。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">8</span><span class="rep-name">算笔账：我们如何接管任意 ChatGPT 账号</span></div><div class="rep-meta">330 分 ｜ 165 评论 ｜ 已读原文 ｜ <span class="src">www.parameter.ai</span></div><a class="repo-link" href="https://www.parameter.ai/labs/we-found-a-gap-at-openai">https://www.parameter.ai/labs/we-found-a-gap-at-openai</a><p class="rep-sum">Parameter 团队发现，把恶意对话用正常的分享功能发布再发给目标，受害者只要打开链接，攻击者控制的 JavaScript 就会以 chatgpt.com 身份在已登录会话中执行：可枚举对话列表、读取从未分享过的私聊内容并外传到外部服务器，等于直接接管账号，无需安装应用、加入项目或粘贴代码。漏洞链由两个看似无害的功能拼成：HTML Preview 被隔离在独立域名的 iframe 里，但对话中的交互图表加载了 MathLive 数学库，其键盘监听器以 origin policy 为 none 接收任意来源的 postMessage；Preview 发消息替换键盘布局，布局允许含 HTML，经 innerHTML 写入主页面，且 createHTML 只是把字符串标记为可信并未消毒，再用无 sandbox 的 srcdoc iframe 获得脚本执行。OpenAI 已于 10 月 26 日修复并定级 P1。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>最高赞的调侃是：再这样下去只能靠「请别登录成我」的君子协定了，密码机制正在失去意义。</li><li>有开发者说自己改用 magic link 登录，并刻意不保留重要数据，理由是降低被攻破后的损失比加固边界更实际。</li><li>也有人回到最朴素的建议：不要点陌生链接，并吐槽科技公司邮件里全是「点此查看更新」和一次性验证码，训练用户点链接本身就是风险。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">9</span><span class="rep-name">Jepsen：ParticleDB 1.1.4 测试报告</span></div><div class="rep-meta">263 分 ｜ 150 评论 ｜ 已读原文 ｜ <span class="src">jepsen.io</span></div><a class="repo-link" href="https://jepsen.io/analyses/particledb-1.1.4">https://jepsen.io/analyses/particledb-1.1.4</a><p class="rep-sum">Jepsen 测试了面向 AI 工作负载的多模型数据库 ParticleDB 1.1.4 至 1.1.18.11.rc-22，共列出 96 个问题，从崩溃、死锁、数据丢失，到无法删除的半可见行、WHERE 4 = 5、被删除的表以扭曲形态重现、列错位、字符串变整数，多数只需单机单客户端、不加任何故障即可复现。到 rc-22 时仅剩十个左右未解决，但默认 occ 事务模式仍会在正常运行中丢失已提交写入，最强的 serializable 模式也出现内部异常与丢失更新。官网宣称「Full ACID」与 TLA+ 形式证明，但测试期间并无 TLA+ 规范可查；Orkes 已在 1.1.19-rc.13 中声称全部修复。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人把官网的「formally proven」读成「formerly proven」来打趣，并追问如果没人读过证明，怎么知道它证的是对的性质。</li><li>有工程师补充实战教训：TLA+ 不证明代码，他曾修复一个「证明正确」的分布式算法，其前提是假设更新原子且零延迟。</li><li>老读者指出这次问题数量远超其他数据库（通常十个以内且多为轻微），怀疑与项目新、甚至与 AI 生成代码有关，但即便新项目，稳定版如此多缺陷也不寻常。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">10</span><span class="rep-name">法国议员通过每 GB 互联网流量 0.055 欧元的税</span></div><div class="rep-meta">99 分 ｜ 137 评论 ｜ 已读原文 ｜ <span class="src">www.assemblee-nationale.fr</span></div><a class="repo-link" href="https://www.assemblee-nationale.fr/dyn/17/comptes-rendus/seance/session-ordinaire-de-2026-2027/premiere-seance-du-vendredi-30-octobre-2026">https://www.assemblee-nationale.fr/dyn/17/comptes-rendus/seance/session-ordinaire-de-2026-2027/premiere-seance-du-vendredi-30-octobre-2026</a><p class="rep-sum">链接是法国国民议会 10 月 30 日预算案一读的会议记录，其中通过了针对每 GB 互联网流量征收 0.055 欧元的修正案，属于 2027 年财政法案的审议内容。原文是冗长的议程与修正案列表，未给出征税范围与执行细节，HN 的讨论因此集中在「谁来付、怎么算」。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>评论普遍认为这是用散弹枪打目标：附带损害巨大且难以预测，连业务该缴多少都算不清。</li><li>有人指出征收责任落在 ISP 身上，因此运营商理论上知道流量来源，但跨境场景立刻失效。</li><li>一个具体质疑：意大利用户连法国 OVH 的 VPS、美国爬虫抓取同一台机器，收发字节涉及多方，究竟该谁为哪一段流量缴税。</li><li>也有冷嘲：真正该缴税的大概是那些非法视频托管站，而它们显然不会照办。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">11</span><span class="rep-name">恶意软件用 LLM 给受害者按「值多少钱」排序</span></div><div class="rep-meta">248 分 ｜ 131 评论 ｜ 已读原文 ｜ <span class="src">blog.talosintelligence.com</span></div><a class="repo-link" href="https://blog.talosintelligence.com/appraisal-by-ai-model-driven-victim-prioritization-in-the-volta-infostealer/">https://blog.talosintelligence.com/appraisal-by-ai-model-driven-victim-prioritization-in-the-volta-infostealer/</a><p class="rep-sum">Talos 披露的 VOLTA 是一个成熟的信息窃取木马，在盗走浏览器密码、Cookie、支付卡、钱包助记词、Discord/Telegram/Steam/Roblox 会话、OAuth 令牌、SSH 与云厂商密钥、Wi-Fi 配置和截图后，会把结构化「证据包」发给 LLM，要求其扮演取证情报分析师，输出「WHAT THEY&#x27;RE WORTH」资产价值排序和「THEIR OPSEC」安全习惯评估，并附引用链。它能用窃取的会话进一步搜索 Gmail 收据核对住址、拉取 UberEats 与 DoorDash 订单、通过被盗 token 补充 Discord 资料，还给出 Roblox 账号的实时估值。木马自删除、不使用自有基础设施，经 OpenRouter 调用 claude-opus-4.6，失败时按 kimi-k2、gemini-2.5-flash 顺序降级，temperature 固定 0.2，并检测回复中的「I can&#x27;t」等拒答措辞。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人质疑用 LLM 做优先级排序又慢又贵又不准，不如现成工具，但立刻被反驳：恶意软件作者不会去买正规订阅，而「够用」就足够。</li><li>一位从业者认为这类方案合理：先用 LLM 快速跑通，再拿真实数据做基准、逐步加启发式规则优化。</li><li>更让人不安的是供应链视角：自动更新工具每月推送成千上万次代码变更，只要一次被污染就可能全盘皆输，因此有人主张按用途把电脑彻底隔离。</li><li>对应的防御经验是：主机上只允许发行版自带的包，其余一律进 Docker 容器，避免 agent 随意越层安装依赖。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">12</span><span class="rep-name">退休教授因阻挡配送机器人被捕：还会再做</span></div><div class="rep-meta">85 分 ｜ 127 评论 ｜ 已读原文 ｜ <span class="src">www.cnn.com</span></div><a class="repo-link" href="https://www.cnn.com/2026/10/31/us/philadelphia-woman-delivery-robots-cec">https://www.cnn.com/2026/10/31/us/philadelphia-woman-delivery-robots-cec</a><p class="rep-sum">78 岁的宾大退休传播学教授 Carolyn Marvin 自 Uber Eats 今年 3 月在费城投放自动配送机器人以来，常在街上站到机器人面前拖延其行程。10 月 14 日她打完流感疫苗回家、一手端着辣酱一手拎着外卖时又拦住一台机器人，围观人群聚集，有人报警，警方称接到「涉及配送机器人的刑事恶作剧」报告，多次命令她离开未果后将其戴上手铐并开出扰乱治安传票。她认为这涉及公共空间与机器人法律地位：宾州 2020 年立法把这类「个人配送设备」归类为行人而非车辆；她主张自己有第一修正案权利在公共空间抗议企业滥用，并强调自己阻挡的是机器而非人。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人从公共空间规则切入：人行道名义上是走路的，既然能为滑板车和轮椅开口子，就说明并非全有或全无，但给轮式机器人开口子需要重新论证。</li><li>争论随即转向决策程序：有人质问这些例外究竟由谁集体决定，是否只是极少数人的选择。</li><li>回应称代议制本就是少数人做决定，不满意就换代表或推动地方直投，并指出把允许配送机器人等同于「无能」是过强的假设，不少人觉得它们挺方便。</li><li>也有评论反讽她的立场：一边反对大企业，一边消费着全球供应链生产的商品，标准并不一致。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">13</span><span class="rep-name">意大利农民在阁楼发现未知种子，种出了「圣经里的」小麦</span></div><div class="rep-meta">438 分 ｜ 125 评论 ｜ 已读原文 ｜ <span class="src">www.smithsonianmag.com</span></div><a class="repo-link" href="https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/">https://www.smithsonianmag.com/science-nature/italian-farmer-found-unknown-seeds-attic-with-nothing-lose-planted-them-result-biblical-180989644/</a><p class="rep-sum">1990 年代初，帕尔马农民 Claudio Grossi 在清理阁楼时发现曾祖父（约 1915 年建场）留下的一袋种子，干裂到他不信能发芽，随手倒进粪堆。结果长出几种小麦，其中一种高达六英尺、约为商业品种两倍，一株长七支麦穗（一支长穗加六支短穗，形如手指），籽粒更大且呈黄、黑、红、白、绿多色，甚至同一茎上并存。他在教堂读到《创世记》中法老梦见一茎七穗、约瑟解梦的段落，觉得对上了，于是磨粉烤面包：面团发酵不佳，但香气坚果味浓、口感带甜。该品种更耐旱、长得高能压住杂草、不需化肥和除草剂。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>标题引发争议：原题含「almost biblical」后被修改，提交者说明是自己因标题过长而缩短的，并指出「几乎圣经」来自他当时读到的经文对照，而非种子真有圣经年代。</li><li>有人吐槽这种用法离谱：曾祖父与圣经相隔两千年，按这个标准「黑死病几乎毁灭 2026 世界杯决赛」也算接近。</li><li>也有读者认为文章本身很有意思，标题基本如实描述了「阁楼种子随手种下、结果惊人」的过程，争议被放大了。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">14</span><span class="rep-name">Prospero：为更文明时代打造的新编码 harness</span></div><div class="rep-meta">191 分 ｜ 123 评论 ｜ 已读原文 ｜ <span class="src">nullprogram.com</span></div><a class="repo-link" href="https://nullprogram.com/blog/2026/10/31/">https://nullprogram.com/blog/2026/10/31/</a><p class="rep-sum">nullprogram 作者不满今年所有编码 harness 都用 Web 技术栈、吃掉数 GB 内存，自己用 C++ 与 Dear ImGui 写了一个原生 GUI 版本 Prospero，资源占用低约两个数量级而功能不减。它的核心判断是 harness 本质只是 curl 加 popen()；不含内置模型供应商，需自备 llama.cpp、本地部署、OpenRouter 或各家 API（不能用 Claude 订阅）。支持子 agent 并行与互相通信、把无头副本部署到 SSH 或 WSL 主机、通过视觉能力直接操作桌面测试 GUI，因而无需 TUI；配置放在 INI 文件里，可纳入版本控制，也可通过 URL include 做共享或托管配置。作者另设 Professional Edition 收费版。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有用户装完惊叹：还没接任何模型，安装包只有 5 MB，启动与每个按钮都是瞬间响应，「都忘了软件可以这么快」。</li><li>也有人直言界面难看、专业版收费让人反感，质疑「我们是在 2000 年吗」；立刻有人反驳说正是怀念那个不臃肿、只把事做完的年代。</li><li>多条评论赞赏 Dear ImGui 的空间利用效率，希望能把这套界面套在 opencode 或 Codex 之上。</li><li>还有细节纠错：宣传说支持 Windows、macOS、Linux，但专业版购买页只列了 Windows 和 Mac，Linux 大概没有二进制分发。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">15</span><span class="rep-name">1980 年代的 Casio 手表</span></div><div class="rep-meta">227 分 ｜ 111 评论 ｜ <span class="src">www.casio.com</span></div><a class="repo-link" href="https://www.casio.com/us/watches/50th/Heritage/1980s/">https://www.casio.com/us/watches/50th/Heritage/1980s/</a><p class="rep-sum">链接指向 Casio 官方 50 周年纪念的 1980 年代经典表款页面，原文未抓取成功，因此只能从标题与讨论判断：社区在回顾那个年代卡西欧电子表的耐用、低价与功能主义设计。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>核心共识是「当年能用，现在还能用」，走时准确、便宜、免维护，正是手表该做的事。</li><li>有表友对比 F-91W 与带背光的 F-105：后者屏幕对比度更低、白天更难读，F-91W 数字也略大，因此城市环境选 F-91W，离网场景选 F-105。</li><li>一位用户分享旅行表的十年纠结，最终选了 Casio AE1200 世界时间款：十年电池、能处理印度这类半小时时区，护照换新时顺手换电池即可。</li><li>也有人谈情感层面：日本制造的卡西欧与索尼在发展中地区象征着实惠而可靠的功能主义，以及对「一件能用几十年」的资产的向往。</li></ul></div>
+
+<div class="foot">共 15 条链接，取到原文 13 条，收录评论 120 条。<br>
+本日报由 Ember 自动生成，摘要与评论要点由 AI 综合原文与讨论生成，仅供参考。</div>
+
+</main>
+</body>
+</html>
