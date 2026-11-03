@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Hacker News 日报</title>
+<style>
+  :root{
+    --accent:#ff6600; --ink:#111827; --body:#374151; --muted:#6b7280;
+    --line:#e7e5e4; --bg:#f7f6f4; --card:#ffffff; --thead:#f6f4f1; --chip:#f1f5f9;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --ink:#f1f5f9; --body:#cbd5e1; --muted:#94a3b8;
+      --line:#2b3441; --bg:#0e131a; --card:#151c26; --thead:#1c2531; --chip:#1c2531; }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--body);
+    font:16px/1.8 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Droid Sans Fallback",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; padding-bottom:40px}
+  .wrap{max-width:1040px; margin:0 auto; padding:0 16px}
+
+  .hero{background:var(--accent); color:#fff; padding:30px 0 24px; border-radius:0 0 18px 18px}
+  .hero .wrap{padding:0 20px}
+  .kick{font-size:12px; letter-spacing:.22em; text-transform:uppercase; opacity:.85}
+  .hero h1{margin:.2em 0 .12em; font-size:clamp(24px,4.8vw,36px); line-height:1.25}
+  .hero .date{font-size:13.5px; opacity:.92}
+  .hero .sub{font-size:14px; opacity:.9; margin-top:4px}
+  .stats{display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:12px; font-size:13px}
+  .stats span{background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.24);
+    border-radius:999px; padding:3px 11px}
+
+  h2{font-size:19px; color:var(--accent); margin:30px 0 10px; padding-left:11px;
+    border-left:5px solid var(--accent); line-height:1.4}
+  h3{font-size:15.5px; color:var(--ink); margin:16px 0 6px}
+  p{margin:.55em 0}
+  a{color:var(--accent)}
+
+  .tw{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:8px 0 10px;
+    border:1px solid var(--line); border-radius:10px}
+  .tw table{margin:0; border:0}
+  table{border-collapse:collapse; width:100%; font-size:15px; background:var(--card)}
+  th,td{border-bottom:1px solid var(--line); padding:8px 11px; text-align:left}
+  th{background:var(--thead); color:var(--ink); font-weight:700; font-size:13.5px}
+  tr:last-child td{border-bottom:0}
+
+  footer{margin-top:26px; padding-top:14px; border-top:1px solid var(--line);
+    font-size:12.5px; color:var(--muted); line-height:1.8}
+  .foot{margin:0}
+
+  @media (min-width:900px){ h2{margin-top:34px} }
+  @media print{
+    body{background:#fff; padding:0; font-size:10.5pt}
+    .hero{background:#fff; color:#000; border-radius:0; border-bottom:2px solid var(--accent); padding:0 0 8px}
+    .stats span{border:1px solid #999}
+    .tw{overflow:visible}
+    h2{break-after:avoid}
+  }
+  
+  .headline{font-size:19px;line-height:1.6;font-weight:700;color:var(--ink);
+    background:rgba(255,102,0,.08);border-left:4px solid var(--accent);border-radius:8px;
+    padding:12px 14px;margin:6px 0}
+  ul.highlights{margin:.2em 0 .8em;padding-left:1.15em}
+  ul.highlights li{margin:.35em 0}
+  .overview{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;color:var(--body);margin:10px 0 16px}
+  .repo{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;margin:12px 0;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+  .rep-head{font-size:17px;font-weight:700;color:var(--ink);line-height:1.45}
+  .rank{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;
+    border-radius:50%;background:var(--accent);color:#fff;font-size:12.5px;margin-right:8px;vertical-align:1px}
+  .rep-meta{font-size:13px;color:var(--muted);margin:4px 0 2px}
+  .src{color:var(--muted)}
+  .repo-link{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 8px;
+    word-break:break-all;text-decoration:none}
+  .rep-sum{font-size:16px;line-height:1.85;color:var(--body);margin:.3em 0}
+  .cmt-ttl{font-size:14px;font-weight:700;color:var(--accent);margin:12px 0 4px}
+  .cmts{padding-left:1.2em;margin:.2em 0}
+  .cmts li{font-size:15px;line-height:1.75;margin:.3em 0}
+  .badge-repeat{font-size:11.5px;border:1px solid var(--line);border-radius:999px;
+    padding:0 8px;margin-left:6px;color:var(--muted);font-weight:400}
+  .foot{margin-top:24px;border-top:1px solid var(--line);padding-top:12px;
+    font-size:12.5px;color:var(--muted);line-height:1.8}
+  .na{color:#b6bcc5}
+
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="kick">HACKER NEWS · DAILY BRIEF</div>
+    <h1>Hacker News 日报</h1>
+    <div class="date">2026-11-03</div>
+    <div class="sub">AI 资本狂热遇上信任裂缝：财报、漏洞与冷柜攻击</div>
+    <div class="stats"><span>15 条链接</span><span>112 条评论</span><span>AI 中文小结</span></div>
+  </div>
+</header>
+<main class="wrap">
+
+<div class="hdr">
+
+
+
+<div style="font-size:16.1pt;font-weight:bold;color:#586069;margin-bottom:3px;">一句话概括</div>
+<div class="headline">AI 资本狂热遇上信任裂缝：财报、漏洞与冷柜攻击</div>
+<div style="font-size:16.1pt;font-weight:bold;color:#586069;margin-bottom:3px;">今日话题</div>
+<ul class="highlights"><li>Anthropic Q3 营收约 170 亿美元，环比增速从 141% 降到 45%</li><li>Oracle 拟增发 100 亿美元股票加 100 亿美元债券，股价当日跌 8.8%</li><li>Ubuntu 对 9.8 分内核漏洞两周多未修补，博主宣布迁离所有服务器</li><li>欧洲七国超市冷柜被黑升至 50C，疑为无勒索诉求的破坏行动</li><li>BYD 10 月纯电销量 30.6 万辆，超过美国整季约 26.25 万辆</li></ul>
+<p class="overview">今天 HN 的重心几乎全在 AI 的钱上：Anthropic 的 S-1 补交数据、Oracle 增发融资、以及“增速是否已经见顶”的激烈互撕，乐观派与泡沫论者各执一词。另一条主线是信任与运维现实：Ubuntu 迟迟不修 9.8 分内核漏洞，欧洲超市冷柜连续遭袭，提醒人们基础设施的脆弱。社区共识是 AI 资本循环越来越难读懂，分歧在于这究竟是高速扩张的阵痛还是拐点。</p>
+
+<h2>热门链接与讨论</h2>
+</div>
+<div class="repo"><div class="rep-head"><span class="rank">1</span><span class="rep-name">Astra 能直接读写神经网络权重来改进 Qwen</span></div><div class="rep-meta">2,624 分 ｜ 799 评论 ｜ 已读原文 ｜ <span class="src">rikiyat.github.io</span></div><a class="repo-link" href="https://rikiyat.github.io/blog/weight-space-programming/">https://rikiyat.github.io/blog/weight-space-programming/</a><p class="rep-sum">一项实验称前沿大模型已能原生读写神经网络权重：GPT-6 Astra 仅看原始权重就能判断网络训练目标，并在没有任何环境反馈的情况下从零写出小游戏网络，表现超过用 PPO 训练一亿步的版本。它还在不改梯度的情况下定位 Qwen3.5-0.8B 中导致推理循环的权重问题，只编辑 0.016% 的权重，就把 MATH-500 从 7.9% 提到 48.1%，并顺带把 IFEval 提升三倍。作者把这种让模型推理每部分权重该算什么、再动手改的做法称为 Weight-Space Programming。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>不少人震惊于模型“凭直觉”理解权重，认为这让此前的可解释性工具显得像原始摸索；也有人觉得事后看理所当然，只是人类没想到这条路。</li><li>有评论推测这更像通用 ML 推理能力的涌现，而非专门训练，否则 OpenAI 早该写进官方宣传；并好奇 Goodfire 研究者如何回应。</li><li>讨论延伸到对齐：如果可解释性工作能直接交给模型做，所谓超级对齐也许没有想象中难。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">2</span><span class="rep-name">Ubuntu 到底怎么了？</span></div><div class="rep-meta">1,523 分 ｜ 632 评论 ｜ 已读原文 ｜ <span class="src">chalmovsky.com</span></div><a class="repo-link" href="https://chalmovsky.com/posts/wtf-ubuntu">https://chalmovsky.com/posts/wtf-ubuntu</a><p class="rep-sum">作者抨击 Canonical 对 CVE-2026-98432 反应迟缓：这是 Linux 内核 TCP 代码中自 2016 年起存在的 9.8 分漏洞，可被远程利用，Anthropic 称已做出可拿到 root 的利用程序。Debian 在 10 月 16 日就修复，Ubuntu 两周多后所有受支持版本（含 LTS）仍标为易受攻击。作者认为官网“及时修补关键漏洞”的承诺是空话，已把所有 Ubuntu 服务器下线并准备整体迁移。</p></div><div class="repo"><div class="rep-head"><span class="rank">3</span><span class="rep-name">欧洲多国超市冷柜遭第二波疑似网络攻击</span></div><div class="rep-meta">393 分 ｜ 436 评论 ｜ 已读原文 ｜ <span class="src">www.theguardian.com</span></div><a class="repo-link" href="https://www.theguardian.com/world/2026/nov/02/supermarket-freezers-across-europe-hit-by-second-suspected-cyber-attack">https://www.theguardian.com/world/2026/nov/02/supermarket-freezers-across-europe-hit-by-second-suspected-cyber-attack</a><p class="rep-sum">比利时、爱沙尼亚、爱尔兰、芬兰、卢森堡、荷兰、瑞典至少七国的超市报告冷柜温度夜间升至 50C，部分门店被迫清空冷藏货架。上月法国已有至多 700 家门店的制冷设备被接管，造成火灾与数千万欧元损失。安全人士指出此次攻击没有勒索要求，更像蓄意破坏，而大量制冷控制器在法国事件后仍可从公网直接访问。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人把法国旧闻当成本次事件，被其他评论纠正：当前这波覆盖从爱尔兰到芬兰的整个欧洲。</li><li>讨论追问责任归属：把制冷设备暴露在公网是否构成过失，保险还会不会赔付，这也可能是攻击者选择冷柜的原因。</li><li>有评论由此呼吁立法，明确哪些设备根本不应具备联网能力。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">4</span><span class="rep-name">美国男孩名与女孩名的双向转换</span></div><div class="rep-meta">401 分 ｜ 383 评论 ｜ 已读原文 ｜ <span class="src">namedaisy.com</span></div><a class="repo-link" href="https://namedaisy.com/blog/boy-names-that-became-girl-names">https://namedaisy.com/blog/boy-names-that-became-girl-names</a><p class="rep-sum">基于美国社保局 1936 至 2025 年的新生儿名字数据，作者统计出 42 个名字从以男孩为主转为以女孩为主，反向转换只有 12 个。更关键的发现是驱动力：转向女孩的 42 个名字里有 34 个主要因为女孩使用量上升，而转向男孩的 12 个里有 9 个是因为女孩使用量急剧下降，而非男孩变多。转向女孩多发生在名字人气创新高时，转向男孩则常发生在名字几乎消失之后。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人把 Arya 的转向归功于乔治·R·R·马丁，但被指出该名 2004 年才真正翻转，此前在数据中几乎不存在。</li><li>多位评论认为单个名人就能带动名字性别翻转，并指出“女孩名更易变”与女性更愿意采用传统男性事物、反向却罕见的模式一致。</li><li>有人补充文化解释：女性穿裤子进办公室已属正常，男性穿裙子却会被视为变装或跨性别。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">5</span><span class="rep-name">Show HN：Subvocal，用不发声的方式对电脑说话</span></div><div class="rep-meta">696 分 ｜ 340 评论 ｜ <span class="src">站内讨论</span></div><a class="repo-link" href="https://news.ycombinator.com/item?id=50340088">https://news.ycombinator.com/item?id=50340088</a><p class="rep-sum">这是一个让用户在不发出声音的情况下与电脑对话的 Show HN 项目，原文与项目页均未取到，具体技术路线无法确认。讨论集中在使用场景与形态：在公共场合无声说话是否自然，以及是否需要额外穿戴设备。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论觉得在公共场合这样说话尴尬，版主随即提醒不要对他人的作品做轻率否定，并强调新帖的早期讨论氛围极易被带偏。</li><li>有人分享开源实现 subvox 和用摄像头读唇的 lipflow，认为免穿戴的唇读才是真正的大众方案，戴眼镜的形态会劝退大量用户。</li><li>一位开发者称唇读受信息论限制：语音有约 40 个音素，外部可分辨的视素只有 12 到 15 个，P 与 B 在镜头里几乎一样，词错率约 17% 后难以继续下降。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">6</span><span class="rep-name">Ask HN：谁想被雇用？（2026 年 11 月）</span></div><div class="rep-meta">43 分 ｜ 337 评论 ｜ <span class="src">站内讨论</span></div><a class="repo-link" href="https://news.ycombinator.com/item?id=50338726">https://news.ycombinator.com/item?id=50338726</a><p class="rep-sum">这是 HN 每月固定的求职贴，参与者在评论中列出所在地、是否接受远程、是否愿意搬迁、技术栈、简历链接与邮箱。帖子本身不含原文，从评论可见求职者多为资深工程师，覆盖 Rust、TypeScript、Python 全栈、Ruby on Rails、AI 工程与数据后端等方向。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>远程几乎成为默认选项，多数人明确不愿搬迁，并接受合同制或通过 EOR 雇佣。</li><li>AI 岗位求职者倾向用可量化成果说话，例如把视频生成从每段 2 美元、60 分钟压到 0.8 美元、10 分钟，并强调让非工程师也能独立使用。</li><li>部分自我介绍篇幅很长且术语密集，也有人以十年以上经验、开源与安全加固能力作为差异化卖点。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">7</span><span class="rep-name">Anthropic 公布 Q3 营收 170 亿美元，修订版 S-1 列出 8950 亿美元承诺</span></div><div class="rep-meta">232 分 ｜ 275 评论 ｜ 已读原文 ｜ <span class="src">www.cnbc.com</span></div><a class="repo-link" href="https://www.cnbc.com/2026/11/02/anthropic-ant-s-1-quarter-financials.html">https://www.cnbc.com/2026/11/02/anthropic-ant-s-1-quarter-financials.html</a><p class="rep-sum">Anthropic 在修订版 S-1 中补上第三季度数据：截至 9 月底的九个月营收 332.4 亿美元，同比增长约 1200%；Q3 营收约 170 亿美元，同比增长约 1127%，但环比增速从 Q2 的 144% 降至 47%。九个月净亏损 1040 亿美元，主要来自可转债与衍生负债的公允价值变动；Q3 净亏损 232.9 亿美元。公司还披露约 8954 亿美元的采购承诺与租赁协议，几乎全部与算力和基础设施有关。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人认为公布数据本身是权衡后的选择：继续隐瞒 Q3 引发的猜测，对 IPO 定价的伤害可能比数字本身更大。</li><li>有评论质疑 1040 亿美元亏损中可转债公允价值调整被当作一次性项目，如果反复发生，就应给出更完整的会计解释。</li><li>关于普通人为何要在意：公司即将上市，直接持股或通过养老金间接持股的人都会成为股东。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">8</span><span class="rep-name">BYD 上月纯电销量超过美国整季</span></div><div class="rep-meta">266 分 ｜ 272 评论 ｜ 已读原文 ｜ <span class="src">electrek.co</span></div><a class="repo-link" href="https://electrek.co/2026/11/02/byd-sold-more-evs-last-month-than-the-us-did-all-quarter/">https://electrek.co/2026/11/02/byd-sold-more-evs-last-month-than-the-us-did-all-quarter/</a><p class="rep-sum">BYD 10 月售出 490,168 辆新能源车，同比增长 11%，其中纯电 305,743 辆，同比增长 37%，首次单月突破 30 万辆。作为对照，Kelley Blue Book 估算美国第三季度纯电销量仅约 262,500 辆。BYD 当月出口 170,194 辆，前 10 个月出口超过 150 万辆，接近去年的两倍，但插混销量同比下降 17%。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论批评“西方不愿前进”的说法太笼统：欧洲、北欧与澳大利亚的电动车销量都在快速增长，真正押注燃油车的主要是美国。</li><li>有人认为澳大利亚市场缺的是一台合适的电动皮卡，谁先做出来谁就能赚钱，瓶颈更多在电池成本而非需求。</li><li>有人举例说身边“永不买电动车”的朋友，其公司已采购 BYD Shark 插混皮卡，认为这类产品正在改变保守用户。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">9</span><span class="rep-name">SEC 应阻止 Anthropic 上市以保护公众</span></div><div class="rep-meta">351 分 ｜ 258 评论 ｜ 已读原文 ｜ <span class="src">www.techpolicy.press</span></div><a class="repo-link" href="https://www.techpolicy.press/the-sec-should-block-anthropics-ipo-to-protect-the-public/">https://www.techpolicy.press/the-sec-should-block-anthropics-ipo-to-protect-the-public/</a><p class="rep-sum">作者 Matt Scherer 认为 Anthropic 的招股书表面亮眼，细看却问题重重：约 8950 亿美元合同承诺中，至少 5820 亿美元是对 Amazon、AMD、Broadcom、Google、Microsoft 五家公司的不可取消支出，而现金储备为 960 亿美元。2026 年财务数据尚未经过正式审计，Q3 增速又明显放缓。文章还认为需求不足、模型同质化引发的价格战、以及芯片与数据中心的高成本，会同时挤压其利润率。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>争论集中在指数基金是否会被动接盘：有人指出 SpaceX 尚未进入 S&amp;P 500，但 Russell 与 CRSP 指数已将其纳入，VTI 这类巨型基金因而会买入。</li><li>有评论补充 CRSP 的快速纳入规则已存在约十年，并非为某家公司临时改规则，与 Nasdaq 的做法不同。</li><li>也有人质疑“养老金自动买入”的说法被夸大，真正被强制配置的资金规模有限。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">10</span><span class="rep-name">按零售价计算，Anthropic 内部 AI 用量已超过员工薪酬</span></div><div class="rep-meta">325 分 ｜ 249 评论 ｜ 已读原文 ｜ <span class="src">www.businessinsider.com</span></div><a class="repo-link" href="https://www.businessinsider.com/anthropic-claude-internal-ai-use-exceeds-employee-pay-tokens-2026-11">https://www.businessinsider.com/anthropic-claude-internal-ai-use-exceeds-employee-pay-tokens-2026-11</a><p class="rep-sum">Anthropic 在 IPO 文件中披露，按对外售价折算，4 月内部使用的 Claude 价值已超过月度员工薪酬（不含股票奖励），到 9 月内部用量比 1 月增长 250 倍以上。需要强调的是这并非真实现金支出，而是按零售价计价；同期 9 月新增代码中超过 90% 由 Claude 编写，营收增速远高于员工人数增速。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>批评者认为按零售价而非自用成本计价纯属为 IPO 造势，任何公司都不会把员工用自家软件按市价算成支出。</li><li>反驳意见认为这个口径反而有信息量：其他公司若按零售价购买同等智能，AI 开销可能真的超过人力成本，值得据此判断趋势。</li><li>也有人不接受“Anthropic 代表全行业”的推论，调侃本地铁路公司或律所不会按同等 token 密度运作。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">11</span><span class="rep-name">旧金山 AI 热潮把失业的技术工作者排除在外</span></div><div class="rep-meta">174 分 ｜ 247 评论 ｜ <span class="src">www.bloomberg.com</span></div><a class="repo-link" href="https://www.bloomberg.com/news/features/2026-09-17/san-francisco-s-ai-wealth-boom-skirts-engineers-as-openai-anthropic-ipos-near">https://www.bloomberg.com/news/features/2026-09-17/san-francisco-s-ai-wealth-boom-skirts-engineers-as-openai-anthropic-ipos-near</a><p class="rep-sum">彭博报道称，旧金山正享受 AI 带来的财富效应，但失业的工程师并未分享到红利，而此时 OpenAI 与 Anthropic 的 IPO 正在临近。原文未取到，以下仅基于标题与讨论，不涉及报道中的具体数据。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>一派把矛头指向 H-1B，认为企业用签证劳工压低本土工程师薪资；立刻有人反驳说真正的替代来自离岸外包。</li><li>反对离岸者强调海外劳工不与其竞争住房、教育等本地资源，也有人主张让企业承担离岸的利弊，并释放被占用的地产给本土创业者。</li><li>另有评论认为离岸外包已接近上限，不少公司已把部分工作搬回本土，问题不只是签证政策。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">12</span><span class="rep-name">Anthropic 的增长刚刚走平</span></div><div class="rep-meta">208 分 ｜ 242 评论 ｜ 已读原文 ｜ <span class="src">www.regenerator1.com</span></div><a class="repo-link" href="https://www.regenerator1.com/p/anthropics-growth-just-flattened">https://www.regenerator1.com/p/anthropics-growth-just-flattened</a><p class="rep-sum">作者根据 NYT 报道的 Q3 营收 168 亿美元拆解趋势：Q1 为 48 亿、Q2 为 116 亿、Q3 为 168 亿，环比增速从 141% 降到 45%，绝对增量也从 68 亿降到 52 亿。若把 7 月 650 亿美元年化营收折算进去，8 月和 9 月几乎停滞，Anthropic 也未向投资者给出 9 月的年化数字。作者认为这可能解释 neocloud 股价下跌，原因或为季节性、产能跟不上，或需求放缓与用户转向更便宜的中国模型。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人直言 Anthropic 的产品虽被快速采用却没有护城河，随即被反驳为对行业一无所知。</li><li>有评论认为在弄清订阅补贴程度之前，Anthropic 的数字意义有限，并担心循环融资制造虚假盈利。</li><li>也有人指出真正的循环融资质疑集中在其下游客户，目前没有可信证据表明 Anthropic 自身营收是循环的。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">13</span><span class="rep-name">为什么苏联数学教材比美国教材硬核得多？（2017）</span></div><div class="rep-meta">169 分 ｜ 236 评论 ｜ <span class="src">www.quora.com</span></div><a class="repo-link" href="https://www.quora.com/Why-are-Soviet-mathematics-physics-textbooks-so-insanely-hardcore-in-comparison-to-US-textbooks/answer/Scott-Miller-307?share=1">https://www.quora.com/Why-are-Soviet-mathematics-physics-textbooks-so-insanely-hardcore-in-comparison-to-US-textbooks/answer/Scott-Miller-307?share=1</a><p class="rep-sum">这是一则 2017 年的 Quora 回答，讨论苏联时期的数学与物理教材为何比美国教材更严格、更强调推导。原文未取到，这里只依据标题与评论展开，不复述回答中的具体论点。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论批评加州因测试成绩不佳而提议取消八年级代数与进阶课程，认为这是把指标当目标、为分数牺牲教育。</li><li>支持者以 Russian School of Math 为参照，称其二年级就引入变量，让不理解概念的学生尽早暴露问题，而不是被数字掩盖。</li><li>有人回忆多数国家高中前只设“数学”一门课，微积分、统计并非选修，全部学生都要接触。</li><li>一位硕士生感叹连较容易的课程都在抱怨阅读量与考试，认为各处的严谨性正在被消解。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">14</span><span class="rep-name">Ask HN：谁在招聘？（2026 年 11 月）</span></div><div class="rep-meta">218 分 ｜ 176 评论 ｜ <span class="src">站内讨论</span></div><a class="repo-link" href="https://news.ycombinator.com/item?id=50338728">https://news.ycombinator.com/item?id=50338728</a><p class="rep-sum">这是 HN 每月固定的招聘贴，雇主在评论中发布岗位、地点、远程政策与薪资。可见的岗位包括 Simple Analytics 的远程 DevOps（每周 32 或 24 小时，全职口径 5000 欧元每月）、美国开发者云公司的增长负责人与系统管理员、剑桥与曼彻斯特的 AI 与地球观测博士岗位（每年 3 万英镑免税津贴），以及要求荷兰语的非营利前端职位。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>Simple Analytics 创始人说申请量很大，建议后来者介绍自己而不是复述招聘广告，并半开玩笑地请对方关掉 AI 十分钟、保留拼写错误。</li><li>有申请人追问 5000 欧元对应多少工时，创始人确认按 40 小时全职口径折算，合同内工时固定但可跨周调整。</li><li>也有同行直言该薪资在荷兰偏低，对符合全部要求的人而言是降级。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">15</span><span class="rep-name">Oracle 申请增发 200 亿美元股票与债券，为 AI 建设融资</span></div><div class="rep-meta">189 分 ｜ 168 评论 ｜ 已读原文 ｜ <span class="src">www.cnbc.com</span></div><a class="repo-link" href="https://www.cnbc.com/2026/11/02/oracle-files-to-sell-20-billion-in-new-stock-bonds-to-finance-ai-buildout.html">https://www.cnbc.com/2026/11/02/oracle-files-to-sell-20-billion-in-new-stock-bonds-to-finance-ai-buildout.html</a><p class="rep-sum">Oracle 周一提交文件，计划发行 100 亿美元普通股与 100 亿美元高级票据，用于一般企业用途，可能包括资本开支、偿债与投资。该计划上周投资者日已预告，但股价当日仍下跌 8.8%；公司维持 2030 财年至少 2250 亿美元营收的预测，并称本轮融资是 2027 至 2030 投资周期的最后一笔。其股价 2026 年内跌 33%，五年期 CDS 利差一年上涨 265%，7 月已被 S&amp;P 降至 BBB-。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人感叹原本想用买 AI 股票对冲失业，没想到建设资金靠增发股票，等于自己为替代自己的东西买单。</li><li>有评论提醒行业与就业高度相关：失业与股市下跌若同时发生，才会被迫在低点卖出资产。</li><li>也有人辩护说发行股票本就是上市的核心目的，并且现有股份通常附带投票权。</li></ul></div>
+
+<div class="foot">共 15 条链接，取到原文 10 条，收录评论 112 条。<br>
+本日报由 Ember 自动生成，摘要与评论要点由 AI 综合原文与讨论生成，仅供参考。</div>
+
+</main>
+</body>
+</html>
