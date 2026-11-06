@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Hacker News 日报</title>
+<style>
+  :root{
+    --accent:#ff6600; --ink:#111827; --body:#374151; --muted:#6b7280;
+    --line:#e7e5e4; --bg:#f7f6f4; --card:#ffffff; --thead:#f6f4f1; --chip:#f1f5f9;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --ink:#f1f5f9; --body:#cbd5e1; --muted:#94a3b8;
+      --line:#2b3441; --bg:#0e131a; --card:#151c26; --thead:#1c2531; --chip:#1c2531; }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--body);
+    font:16px/1.8 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Droid Sans Fallback",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; padding-bottom:40px}
+  .wrap{max-width:1040px; margin:0 auto; padding:0 16px}
+
+  .hero{background:var(--accent); color:#fff; padding:30px 0 24px; border-radius:0 0 18px 18px}
+  .hero .wrap{padding:0 20px}
+  .kick{font-size:12px; letter-spacing:.22em; text-transform:uppercase; opacity:.85}
+  .hero h1{margin:.2em 0 .12em; font-size:clamp(24px,4.8vw,36px); line-height:1.25}
+  .hero .date{font-size:13.5px; opacity:.92}
+  .hero .sub{font-size:14px; opacity:.9; margin-top:4px}
+  .stats{display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:12px; font-size:13px}
+  .stats span{background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.24);
+    border-radius:999px; padding:3px 11px}
+
+  h2{font-size:19px; color:var(--accent); margin:30px 0 10px; padding-left:11px;
+    border-left:5px solid var(--accent); line-height:1.4}
+  h3{font-size:15.5px; color:var(--ink); margin:16px 0 6px}
+  p{margin:.55em 0}
+  a{color:var(--accent)}
+
+  .tw{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:8px 0 10px;
+    border:1px solid var(--line); border-radius:10px}
+  .tw table{margin:0; border:0}
+  table{border-collapse:collapse; width:100%; font-size:15px; background:var(--card)}
+  th,td{border-bottom:1px solid var(--line); padding:8px 11px; text-align:left}
+  th{background:var(--thead); color:var(--ink); font-weight:700; font-size:13.5px}
+  tr:last-child td{border-bottom:0}
+
+  footer{margin-top:26px; padding-top:14px; border-top:1px solid var(--line);
+    font-size:12.5px; color:var(--muted); line-height:1.8}
+  .foot{margin:0}
+
+  @media (min-width:900px){ h2{margin-top:34px} }
+  @media print{
+    body{background:#fff; padding:0; font-size:10.5pt}
+    .hero{background:#fff; color:#000; border-radius:0; border-bottom:2px solid var(--accent); padding:0 0 8px}
+    .stats span{border:1px solid #999}
+    .tw{overflow:visible}
+    h2{break-after:avoid}
+  }
+  
+  .headline{font-size:19px;line-height:1.6;font-weight:700;color:var(--ink);
+    background:rgba(255,102,0,.08);border-left:4px solid var(--accent);border-radius:8px;
+    padding:12px 14px;margin:6px 0}
+  ul.highlights{margin:.2em 0 .8em;padding-left:1.15em}
+  ul.highlights li{margin:.35em 0}
+  .overview{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;color:var(--body);margin:10px 0 16px}
+  .repo{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;margin:12px 0;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+  .rep-head{font-size:17px;font-weight:700;color:var(--ink);line-height:1.45}
+  .rank{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;
+    border-radius:50%;background:var(--accent);color:#fff;font-size:12.5px;margin-right:8px;vertical-align:1px}
+  .rep-meta{font-size:13px;color:var(--muted);margin:4px 0 2px}
+  .src{color:var(--muted)}
+  .repo-link{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 8px;
+    word-break:break-all;text-decoration:none}
+  .rep-sum{font-size:16px;line-height:1.85;color:var(--body);margin:.3em 0}
+  .cmt-ttl{font-size:14px;font-weight:700;color:var(--accent);margin:12px 0 4px}
+  .cmts{padding-left:1.2em;margin:.2em 0}
+  .cmts li{font-size:15px;line-height:1.75;margin:.3em 0}
+  .badge-repeat{font-size:11.5px;border:1px solid var(--line);border-radius:999px;
+    padding:0 8px;margin-left:6px;color:var(--muted);font-weight:400}
+  .foot{margin-top:24px;border-top:1px solid var(--line);padding-top:12px;
+    font-size:12.5px;color:var(--muted);line-height:1.8}
+  .na{color:#b6bcc5}
+
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="kick">HACKER NEWS · DAILY BRIEF</div>
+    <h1>Hacker News 日报</h1>
+    <div class="date">2026-11-06</div>
+    <div class="sub">AI 基建股拖垮纳指，安全漏洞与平台信任危机抢镜</div>
+    <div class="stats"><span>15 条链接</span><span>120 条评论</span><span>AI 中文小结</span></div>
+  </div>
+</header>
+<main class="wrap">
+
+<div class="hdr">
+
+
+
+<div style="font-size:16.1pt;font-weight:bold;color:#586069;margin-bottom:3px;">一句话概括</div>
+<div class="headline">AI 基建股拖垮纳指，安全漏洞与平台信任危机抢镜</div>
+<div style="font-size:16.1pt;font-weight:bold;color:#586069;margin-bottom:3px;">今日话题</div>
+<ul class="highlights"><li>纳指单日跌 5.52%，AI 基建与芯片股遭集中抛售</li><li>musl 用星号替代 crypt() 的 NULL，造成 OpenSSH 认证绕过</li><li>Discord 弃 Electron 转 Rust，Windows 客户端内存降至 290MB</li><li>Claude Code 被指在 User-Agent 中泄露用户邮箱</li><li>Kagi 开放免注册搜索，Salon 停刊终结 31 年数字媒体</li></ul>
+<p class="overview">今天 HN 的主线是 AI 资本开支的可持续性：纳指跌入回调区间，社区一边吐槽标题党，一边认真区分云巨头与芯片、服务器供应商的风险。第二条线是基础软件与平台信任：musl 的星号、Claude Code 的邮箱请求头、Paint 的 RCE 都说明细节能放大成系统性问题，Salon 停刊和 Meta 诈骗广告则延续了对数字商业模式的不满。共识是 AI 基建不会无限加速、付费去广告有价值；分歧在于漏洞的真实暴露面，以及 Section 230 该废除还是该修。</p>
+
+<h2>热门链接与讨论</h2>
+</div>
+<div class="repo"><div class="rep-head"><span class="rank">1</span><span class="rep-name">sshole：一个星号如何绕过 OpenSSH 认证</span></div><div class="rep-meta">2,698 分 ｜ 647 评论 ｜ 已读原文 ｜ <span class="src">sshhole.com</span></div><a class="repo-link" href="https://sshhole.com">https://sshhole.com</a><p class="rep-sum">文章从 Unix 口令文件里的 * 讲起：OpenSSH 会用 crypt() 重新计算口令并与 shadow 字段比较，而 musl 在 crypt() 失败时不再返回 NULL，改为返回 *。若账户口令字段正是 *，比较就会相等，任意密码都可能通过认证；作者用约 17,600 次异常登录测试多种构建，只有 musl 且未启用 PAM 的组合出错。影响 Alpine 等 musl 场景，缓解方式是关闭密码认证或升级。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论指出漏洞只影响 musl 且未启用 PAM 的 OpenSSH，可通过设置 PasswordAuthentication=no 或更新修复。</li><li>实际暴露面存在分歧：有人认为大量 Alpine 容器可能受影响，也有人指出容器通常用 docker exec 而非 sshd，命中概率低但后果严重。</li><li>标题被调侃成 *sshole，评论说星号才是真正的主角。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">2</span><span class="rep-name">Discord 放弃 Electron，新客户端用 Rust 并降低内存占用</span></div><div class="rep-meta">437 分 ｜ 376 评论 ｜ 已读原文 ｜ <span class="src">www.theverge.com</span></div><a class="repo-link" href="https://www.theverge.com/news/1027379/discord-ditching-electron-web-app">https://www.theverge.com/news/1027379/discord-ditching-electron-web-app</a><p class="rep-sum">Discord 宣布桌面客户端全面转向 Rust，Electron 与 React Native 都将退场，移动端保留原生 UI、通过 Rust 共享应用代码。CTO 展示 Windows 客户端仅占 290MB 内存，而现版本在加入多个服务器后常超过 1GB；全面切换时间未定，先争取尽快进入用户测试。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论认为内存紧张反而让工程界重新在意占用，算这场 RAM 危机带来的好事。</li><li>有人担心原生客户端会让 Discord 修改（mod）明显变难，甚至怀疑削弱 mod 才是官方动机。</li><li>讨论也跑题到 Claude 对逆向工程的限制：有人称其仍能完成恶意软件分析和 IDAPython 任务，也有人抱怨游戏逆向被专门拦截。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">3</span><span class="rep-name">我希望科技公司能更懂我一点</span></div><div class="rep-meta">420 分 ｜ 353 评论 ｜ 已读原文 ｜ <span class="src">rakhim.exotext.com</span></div><a class="repo-link" href="https://rakhim.exotext.com/i-wish-tech-companies-knew-more-about-me">https://rakhim.exotext.com/i-wish-tech-companies-knew-more-about-me</a><p class="rep-sum">作者列举自己的广告与推荐体验：刚买床垫就被推床垫，Spotify 多年没学会他跳过带人声的电子乐，Google 在登录状态下把他带到芬兰语页面，航空公司明明有护照扫描件却发错签证信息。结论是数据被大量收集却几乎没被正确使用，科技公司连“刚买过什么”“住在哪里”这类简单事实都没用上。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论反其道而行：既然难免被追踪，宁愿看到完全无关、甚至看不懂语言的广告。</li><li>有人指出精准广告的目标不是帮用户找想要的东西，而是让广告主卖掉自己的东西，预算会进一步扭曲结果；用户真正想要的是付费的推荐而非广告。</li><li>还有评论称亚马逊曾故意混入无关推荐，让系统显得没那么准，同时制造可供传播的截图。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">4</span><span class="rep-name">Kagi 向所有人开放搜索</span></div><div class="rep-meta">672 分 ｜ 346 评论 ｜ 已读原文 ｜ <span class="src">kagi.com</span></div><a class="repo-link" href="https://kagi.com/changelog#11820">https://kagi.com/changelog#11820</a><p class="rep-sum">Kagi 宣布任何人无需账号即可在 kagi.com 搜索，前 50 次免费，注册后再加 100 次；同时更新 Android 应用的主屏、语音搜索与图片搜索。更新日志还批评 Google 从 2027 年起对学校账户默认关闭 AI 工具时连搜索一并关闭，称教育不应被广告公司绑架。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>付费用户称无广告搜索值双倍价钱，并认为搜索广告是史上最有效的广告，Google 正靠这台印钞机供养各种新赌注。</li><li>有人推荐自建 SearXNG 元搜索，可自选来源、减少单一引擎偏见，但日常要不断对抗机器人检测。</li><li>也有评论强调广告无论是否“有效”都是额外认知负担，只有付费才能让服务商的激励与用户一致。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">5</span><span class="rep-name">Claude Code 将你的邮箱地址发送给网站</span></div><div class="rep-meta">1,135 分 ｜ 344 评论 ｜ <span class="src">github.com</span></div><a class="repo-link" href="https://github.com/anthropics/claude-code/issues/107757">https://github.com/anthropics/claude-code/issues/107757</a><p class="rep-sum">一条 GitHub issue 指控 Claude Code 在联网搜索和请求数据时，把用户邮箱写进 User-Agent，导致付费用户收到大量针对从未访问站点的诈骗和钓鱼邮件。该链接原文未取到，具体触发条件与实现细节只能以讨论中的描述为准；争议集中在这是否是人为设计、是否违背最小惊讶原则，以及用户是否该为此买单。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>提交者称请求头形如“会话名/1 &lt;邮箱&gt;”，他因此每天收到数十封诈骗与钓鱼邮件，认为这只会让抓取者和骗子受益。</li><li>有评论怀疑这是 agent 自行加入的行为而非人类设计，违背最小惊讶原则，合理做法是首次连接每个站点时先征得用户同意。</li><li>也有人辩称网站需要某种身份保证、建议改用专用邮箱，但反对者认为不应让用户单方面承担暴露成本。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">6</span><span class="rep-name">摩托罗拉 Signature 27 支持 GrapheneOS</span></div><div class="rep-meta">482 分 ｜ 344 评论 ｜ 已读原文 ｜ <span class="src">motorolanews.com</span></div><a class="repo-link" href="https://motorolanews.com/motorola-signature-27-2/">https://motorolanews.com/motorola-signature-27-2/</a><p class="rep-sum">摩托罗拉发布 Signature 27，主打 DXOMARK 金标相机、12,000 尼特峰值亮度的 Extreme AMOLED Duo 屏幕、骁龙 8 Elite Extreme Gen 6、7,000mAh 电池与 Bang &amp; Olufsen 调音，并成为首款支持 GrapheneOS 的摩托罗拉手机。评论区提到其起售价为 1,599 美元，认为价格已逼近 iPhone Pro Max，性价比存疑。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有用户吐槽外观不佳且价格过高，欧洲挂牌约 7,500 兹罗提，16GB 版本还要更贵。</li><li>有人表示会继续用花十分之一价格买来的二手 Pixel 8 跑 GrapheneOS，认为日常需求用不上这么强的硬件。</li><li>GrapheneOS 官方账号澄清：Pixel 8 及之后机型和这款摩托罗拉都有 7 年支持，并非 GrapheneOS 延长寿命，而是它只选长期获得安全更新的设备；设备停止固件更新后就不宜继续使用。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">7</span><span class="rep-name">Salon 停刊告别信</span></div><div class="rep-meta">580 分 ｜ 228 评论 ｜ 已读原文 ｜ <span class="src">www.salon.com</span></div><a class="repo-link" href="https://www.salon.com/2026/11/05/goodbye-from-salon/">https://www.salon.com/2026/11/05/goodbye-from-salon/</a><p class="rep-sum">Salon 在 2026 年 11 月 5 日宣布停刊，结束自 1995 年 11 月创刊以来 31 年的出版历程。停刊声明称独立数字新闻的商业模式已发生深刻变化、现有模式不可持续，并回顾其在政治、文化、批评与观念报道上的位置。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>老读者怀念 Ask The Pilot、Since You Asked 等专栏，也有人坦言早已不读，近几年几乎没在搜索结果里见过 Salon。</li><li>有评论认为这类靠 SEO 堆量的站点正被 Google AI 摘要吃掉流量，广告收入萎缩后还会有一批跟进停刊。</li><li>一名从业者称即便持续迎合 Google，自然流量仍大幅下滑；也有人追问广告拦截是否也是压垮它的原因之一。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">8</span><span class="rep-name">MS Paint 远程代码执行漏洞</span></div><div class="rep-meta">548 分 ｜ 198 评论 ｜ <span class="src">www.cve.org</span></div><a class="repo-link" href="https://www.cve.org/CVERecord?id=CVE-2026-83844">https://www.cve.org/CVERecord?id=CVE-2026-83844</a><p class="rep-sum">CVE-2026-83844 记录 Windows 画图（Paint）存在越界读取漏洞，可让未认证攻击者通过网络执行代码，且标注无需用户交互，这让不少评论者起初以为是玩笑。由于原文未取到，具体攻击路径只能从讨论中的 CVE 与 MSRC 描述推断。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论第一反应是恶搞，但微软 MSRC 的更新指南确认了这个 CVE 真实存在。</li><li>社区对攻击面感到困惑：Paint 看似不监听网络，有人猜测与 Windows 服务化组件、Copilot 传图或命令行打印有关，但都没有确证。</li><li>也有人调侃，等扫雷出现 RCE 才算真正完了。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">9</span><span class="rep-name">大选后投资者撤离 AI 交易，纳斯达克下跌 5%</span></div><div class="rep-meta">160 分 ｜ 190 评论 ｜ <span class="src">www.wsj.com</span></div><a class="repo-link" href="https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-11-05-2026">https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-11-05-2026</a><p class="rep-sum">WSJ 的直播报道标题称，大选后投资者撤离 AI 交易，纳斯达克单日下跌约 5%。该链接原文未取到，讨论区几乎没有实质分析，主要是围绕选举后行情、显卡价格和 AI 写诗的打油诗。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>社区用打油诗调侃“选举兴奋与宿醉”：8000 美元一张显卡，圣诞节只剩空盒子。</li><li>有人自嘲连押韵都得靠 AI，随后又有人贴出押韵更整齐的版本，形成一场接龙。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">10</span><span class="rep-name">Hackintosh 重生</span></div><div class="rep-meta">309 分 ｜ 172 评论 ｜ 已读原文 ｜ <span class="src">www.naut.ca</span></div><a class="repo-link" href="https://www.naut.ca/blog/2026/11/05/the-hackintosh-reborn-with-ai/">https://www.naut.ca/blog/2026/11/05/the-hackintosh-reborn-with-ai/</a><p class="rep-sum">作者回顾 Hackintosh 从 2021 年 M1 转向 ARM 后被普遍认为走向终结，macOS 27 也已不再兼容 x86；但他用一台 ThinkPad T490 安装 macOS 26 和 Xcode 26，在 AI 辅助下一天内做出首个 iOS 应用。借助 Claude Code 与 Ghidra 等工具，社区近期把 macOS 27 跑上骁龙笔记本、把 macOS 27.2 Beta 跑上 RK3588 开发板，还让 iOS 17 跑进 Switch OLED。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论认为 Hackintosh 的实用场景已经缩小，自己只想要无头构建机，或更关注 Asahi Linux。</li><li>有人反驳说若兼容性完善，在更好的 OLED 笔记本上双启动 macOS 与 Linux 很有价值；但做专业工作仍需稳定环境和及时安全补丁。</li><li>也有人认为 Mac 的价值大半在硬件，Hackintosh 属于两头不讨好，只适合当技术好奇心的玩具。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">11</span><span class="rep-name">纳斯达克跌入回调区间</span></div><div class="rep-meta">216 分 ｜ 172 评论 ｜ 已读原文 ｜ <span class="src">www.cnbc.com</span></div><a class="repo-link" href="https://www.cnbc.com/2026/11/04/stock-market-today-live-updates.html">https://www.cnbc.com/2026/11/04/stock-market-today-live-updates.html</a><p class="rep-sum">CNBC 报道周四美股大跌，纳指收跌 5.52% 至 24,315.00，较上月高点回落逾 10% 进入回调区间；标普 500 跌 4.36%，道指跌 1,833.06 点（3.44%），罗素 2000 也跌 4.45%。导火索是民主党横扫国会与关键州长选举后，投资者担心数据中心建设放缓，英伟达跌 9%、博通跌 10%、甲骨文跌近 7%，半导体 ETF SOXX 跌超 12%。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论批评“暴跌”标题党：纳指仍同比上涨约 4%，单日 4% 的波动最近并不罕见。</li><li>也有人反驳称纳指近期很少出现近 5% 的单日跌幅，而且“回调”在市场上是有明确定义的技术术语。</li><li>还有评论讽刺地说，有些人对 AI 相关股价的变化梯度突然就不理解了。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">12</span><span class="rep-name">英国将强制招聘广告披露薪资</span></div><div class="rep-meta">163 分 ｜ 160 评论 ｜ <span class="src">www.reuters.com</span></div><a class="repo-link" href="https://www.reuters.com/business/world-at-work/britain-make-salary-disclosure-job-ads-mandatory-2026-11-05/">https://www.reuters.com/business/world-at-work/britain-make-salary-disclosure-job-ads-mandatory-2026-11-05/</a><p class="rep-sum">路透社报道英国将要求招聘广告强制披露薪资。原文未取到，讨论集中在执行细节：广告岗位与实际录用岗位不一致时如何适用，以及企业会不会用“永远不按广告岗位招人”来规避。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人担心面试后发现候选人更适合另一个薪资不同的岗位时，法律会制造大量诉讼成本。</li><li>有评论认为这条法律针对的是信息不对称，并不禁止谈判，而是改变双方的议价权力。</li><li>也有人预计诱饵调包会成为常态；另一方指出求职者可以拒绝录用通知，欺骗性地浪费他人时间本身有经济成本。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">13</span><span class="rep-name">下载你最喜欢的 YouTube 视频</span></div><div class="rep-meta">344 分 ｜ 159 评论 ｜ 已读原文 ｜ <span class="src">criminallyvulgar.dev</span></div><a class="repo-link" href="https://criminallyvulgar.dev/you-should-absolutely-download-your-favourite-youtube-videos/">https://criminallyvulgar.dev/you-should-absolutely-download-your-favourite-youtube-videos/</a><p class="rep-sum">文章呼吁把真正在乎的 YouTube 内容下载存档，因为平台上“喜欢的视频”里已有大量消失；基础做法是用 yt-dlp 或封装工具存到 NAS。作者详述自己的 Jellyfin 加 ytdl-sub 播放列表方案，并用 Tdarr 把 2TB 媒体库转成 HEVC，省下约 700GB，同时提醒 Tdarr 界面复杂、容易出问题。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论说观看 YouTube 本来就是把视频下载到本地，只是播放器事后丢弃数据，所以大家应当停止删除。</li><li>有人反驳如今浏览器只接收分片流，分片会自动消失，与 yt-dlp 主动保存完整文件不是一回事。</li><li>争论最后落在“下载”的定义上：一方坚持分片传输也是下载，另一方强调普通用户理解的下载是完整存盘。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">14</span><span class="rep-name">Cuban 指控 Facebook 纵容 AI 诈骗广告，内部文件称涉 160 亿美元</span></div><div class="rep-meta">332 分 ｜ 156 评论 ｜ 已读原文 ｜ <span class="src">finance.yahoo.com</span></div><a class="repo-link" href="https://finance.yahoo.com/technology/ai/articles/mark-cuban-says-facebook-knowingly-213000020.html">https://finance.yahoo.com/technology/ai/articles/mark-cuban-says-facebook-knowingly-213000020.html</a><p class="rep-sum">Mark Cuban 称 Meta 明知 Facebook 上大量以他为主角的 AI 深度伪造广告在骗人仍照常投放，他每周都收到老人询问 294 美元糖尿病“神药”的邮件。文章引用 2025 年 11 月路透社披露的内部文件：Meta 预计约 160 亿美元、占 2024 年营收约 10% 的收入来自诈骗和违禁品广告，每天约 150 亿条“高风险”广告；Meta 回应称该估算粗糙，并称 2025 年下架逾 1.34 亿条诈骗广告。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论要求下一个查 YouTube，称其广告如今也充满欺骗和诈骗。</li><li>围绕 Section 230 的争论最激烈：一方主张付费广告不应受保护，平台靠这些收入赚钱就该做基本审核；另一方指出 230 正是平台敢于适度审核而不承担全责的前提，贸然废除只会逼平台走向完全放任或过度审查。</li><li>也有人补充，最恶劣、零审核的站点本来就不依赖 230 保护。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">15</span><span class="rep-name">美国股市蒸发 2.5 万亿美元</span></div><div class="rep-meta">153 分 ｜ 135 评论 ｜ 已读原文 ｜ <span class="src">finlaws.substack.com</span></div><a class="repo-link" href="https://finlaws.substack.com/p/25t-has-been-wiped-from-us-stocks">https://finlaws.substack.com/p/25t-has-been-wiped-from-us-stocks</a><p class="rep-sum">文章指出纳指单日蒸发约 2.5 万亿美元，但跌得最狠的不是烧钱的云巨头，而是 AI 基建供应商：Alphabet、微软、亚马逊分别跌 2.29%、3.25%、3.55%，AMD、美光、戴尔、GE Vernova 则跌 11% 到 15%。作者认为市场并非突然不信 AI，而是开始区分“花得起钱的公司”和“增长依赖数据中心持续扩张的公司”，后者在许可、电网或现金流受阻时先受冲击。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论用“欠银行一万还是十亿”的旧比喻说明股票市值并不等比缩放。</li><li>有人讨论年底前卖出 AI 股锁定收益是否合理，被反驳为仅为可能的加税而主动实现资本利得税并不划算。</li><li>也有人怀疑民主党上台后的监管转向，认为两党最终都会与大企业保持同步。</li></ul></div>
+
+<div class="foot">共 15 条链接，取到原文 11 条，收录评论 120 条。<br>
+本日报由 Ember 自动生成，摘要与评论要点由 AI 综合原文与讨论生成，仅供参考。</div>
+
+</main>
+</body>
+</html>
