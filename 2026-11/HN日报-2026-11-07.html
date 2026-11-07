@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Hacker News 日报</title>
+<style>
+  :root{
+    --accent:#ff6600; --ink:#111827; --body:#374151; --muted:#6b7280;
+    --line:#e7e5e4; --bg:#f7f6f4; --card:#ffffff; --thead:#f6f4f1; --chip:#f1f5f9;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --ink:#f1f5f9; --body:#cbd5e1; --muted:#94a3b8;
+      --line:#2b3441; --bg:#0e131a; --card:#151c26; --thead:#1c2531; --chip:#1c2531; }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--body);
+    font:16px/1.8 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Droid Sans Fallback",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; padding-bottom:40px}
+  .wrap{max-width:1040px; margin:0 auto; padding:0 16px}
+
+  .hero{background:var(--accent); color:#fff; padding:30px 0 24px; border-radius:0 0 18px 18px}
+  .hero .wrap{padding:0 20px}
+  .kick{font-size:12px; letter-spacing:.22em; text-transform:uppercase; opacity:.85}
+  .hero h1{margin:.2em 0 .12em; font-size:clamp(24px,4.8vw,36px); line-height:1.25}
+  .hero .date{font-size:13.5px; opacity:.92}
+  .hero .sub{font-size:14px; opacity:.9; margin-top:4px}
+  .stats{display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:12px; font-size:13px}
+  .stats span{background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.24);
+    border-radius:999px; padding:3px 11px}
+
+  h2{font-size:19px; color:var(--accent); margin:30px 0 10px; padding-left:11px;
+    border-left:5px solid var(--accent); line-height:1.4}
+  h3{font-size:15.5px; color:var(--ink); margin:16px 0 6px}
+  p{margin:.55em 0}
+  a{color:var(--accent)}
+
+  .tw{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:8px 0 10px;
+    border:1px solid var(--line); border-radius:10px}
+  .tw table{margin:0; border:0}
+  table{border-collapse:collapse; width:100%; font-size:15px; background:var(--card)}
+  th,td{border-bottom:1px solid var(--line); padding:8px 11px; text-align:left}
+  th{background:var(--thead); color:var(--ink); font-weight:700; font-size:13.5px}
+  tr:last-child td{border-bottom:0}
+
+  footer{margin-top:26px; padding-top:14px; border-top:1px solid var(--line);
+    font-size:12.5px; color:var(--muted); line-height:1.8}
+  .foot{margin:0}
+
+  @media (min-width:900px){ h2{margin-top:34px} }
+  @media print{
+    body{background:#fff; padding:0; font-size:10.5pt}
+    .hero{background:#fff; color:#000; border-radius:0; border-bottom:2px solid var(--accent); padding:0 0 8px}
+    .stats span{border:1px solid #999}
+    .tw{overflow:visible}
+    h2{break-after:avoid}
+  }
+  
+  .headline{font-size:19px;line-height:1.6;font-weight:700;color:var(--ink);
+    background:rgba(255,102,0,.08);border-left:4px solid var(--accent);border-radius:8px;
+    padding:12px 14px;margin:6px 0}
+  ul.highlights{margin:.2em 0 .8em;padding-left:1.15em}
+  ul.highlights li{margin:.35em 0}
+  .overview{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;color:var(--body);margin:10px 0 16px}
+  .repo{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;margin:12px 0;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+  .rep-head{font-size:17px;font-weight:700;color:var(--ink);line-height:1.45}
+  .rank{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;
+    border-radius:50%;background:var(--accent);color:#fff;font-size:12.5px;margin-right:8px;vertical-align:1px}
+  .rep-meta{font-size:13px;color:var(--muted);margin:4px 0 2px}
+  .src{color:var(--muted)}
+  .repo-link{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 8px;
+    word-break:break-all;text-decoration:none}
+  .rep-sum{font-size:16px;line-height:1.85;color:var(--body);margin:.3em 0}
+  .cmt-ttl{font-size:14px;font-weight:700;color:var(--accent);margin:12px 0 4px}
+  .cmts{padding-left:1.2em;margin:.2em 0}
+  .cmts li{font-size:15px;line-height:1.75;margin:.3em 0}
+  .badge-repeat{font-size:11.5px;border:1px solid var(--line);border-radius:999px;
+    padding:0 8px;margin-left:6px;color:var(--muted);font-weight:400}
+  .foot{margin-top:24px;border-top:1px solid var(--line);padding-top:12px;
+    font-size:12.5px;color:var(--muted);line-height:1.8}
+  .na{color:#b6bcc5}
+
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="kick">HACKER NEWS · DAILY BRIEF</div>
+    <h1>Hacker News 日报</h1>
+    <div class="date">2026-11-07</div>
+    <div class="sub">AI 研发加速遇上估值回调，Cybertruck 停产</div>
+    <div class="stats"><span>15 条链接</span><span>120 条评论</span><span>AI 中文小结</span></div>
+  </div>
+</header>
+<main class="wrap">
+
+<div class="hdr">
+
+
+
+<div style="font-size:16.1pt;font-weight:bold;color:#586069;margin-bottom:3px;">一句话概括</div>
+<div class="headline">AI 研发加速遇上估值回调，Cybertruck 停产</div>
+<div style="font-size:16.1pt;font-weight:bold;color:#586069;margin-bottom:3px;">今日话题</div>
+<ul class="highlights"><li>Cybertruck 将于 2027 年中停产，产能让给 Cybercab</li><li>Anthropic IPO 估值预期被压到 1.1 万亿美元</li><li>METR：AI 已让 Anthropic 的研发提速约一倍</li><li>Firecracker 逃逸可在宿主机以 root 执行代码</li><li>libghostty 1.0 发布，稳定 C ABI 已被 JetBrains 采用</li></ul>
+<p class="overview">今天 HN 的注意力一半在 AI：METR 的报告称 Anthropic 的研发已被自家模型加速到两倍速，Gemini Omni 1.2 Flash 把 15 秒视频价格再砍 30%，而 Anthropic 的 IPO 估值预期却因 AI 板块回调被压到 1.1 万亿美元，能力加速与资本焦虑同框出现。安全与底层工程同样抢眼：Firecracker 逃逸链、1.5 万个被植入恶意脚本的网站，以及 libghostty 1.0 的稳定 ABI 承诺。共识是 AI 在生产环境中的渗透已不可逆，分歧在于这种加速能否持续，以及它究竟值多少钱。</p>
+
+<h2>热门链接与讨论</h2>
+</div>
+<div class="repo"><div class="rep-head"><span class="rank">1</span><span class="rep-name">特斯拉将停产 Cybertruck</span></div><div class="rep-meta">1,005 分 ｜ 1,856 评论 ｜ 已读原文 ｜ <span class="src">www.nbcnews.com</span></div><a class="repo-link" href="https://www.nbcnews.com/tech/tech-news/tesla-wind-cybertruck-production-years-poor-sales-markets-rcna607817">https://www.nbcnews.com/tech/tech-news/tesla-wind-cybertruck-production-years-poor-sales-markets-rcna607817</a><p class="rep-sum">特斯拉 CEO 马斯克宣布，约 2027 年中在德州超级工厂停止 Cybertruck 生产，以腾出产能给新发布的 Cybercab，后者是他把特斯拉转型为 AI 与机器人公司的核心赌注。Cybertruck 2023 年底才开始交付，据 Kelley Blue Book 数据，去年在美国仅售出 20,237 辆，比 2024 年的 38,965 辆下滑 48%，而马斯克在发布前曾预测年销 25 万辆；其棱角化的不锈钢造型也因行人碰撞法规几乎无法进入欧洲。马斯克称它是「特斯拉造过最好的车」，停产是「一个时代的终结」，该车首席工程师则说它「活在 Cybercab 里」。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人怀疑宣布时机是刻意安排：先用飞行汽车发布会造势，随后清掉账面上的亏损业务，可能是为潜在的 SpaceX 合并铺路。</li><li>熟悉特斯拉的评论者说这不算新闻：Model 3 与 Model Y 一直占交付量 95% 以上，Model X、Cybertruck 停产的传闻几个月前就有了。</li><li>争论落在 FSD 的命名上：一方称特斯拉已在欧洲把 Full Self Driving 改名为 Assisted Driving，另一方反驳美国仍叫 FSD，并强调 Cybercab 已在多个城市无输入装置载客。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">2</span><span class="rep-name">Anthropic IPO 买家给出的估值低至 1.1 万亿美元</span></div><div class="rep-meta">281 分 ｜ 555 评论 ｜ <span class="src">www.bloomberg.com</span></div><a class="repo-link" href="https://www.bloomberg.com/news/articles/2026-11-06/anthropic-ipo-valuation-expectations-pressured-after-ai-rout">https://www.bloomberg.com/news/articles/2026-11-06/anthropic-ipo-valuation-expectations-pressured-after-ai-rout</a><p class="rep-sum">据彭博报道，在 AI 板块经历一轮回调后，Anthropic IPO 的潜在买家把估值预期压到低至 1.1 万亿美元；该报道原文未能抓取，具体数字与措辞以标题为准。讨论很快从「贵不贵」转向「凭什么」：一家尚未上市的公司要站上这个位置，意味着市值超过除少数几家巨头之外的所有上市公司。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>多位金融从业者认为 2000 亿至 4000 亿美元才是合理区间，基本面撑不起更高数字，靠压缩流通盘抬价只会让后续接盘的人和员工吃亏。</li><li>有人列出对照表：苹果 5 万亿、微软 3.97 万亿、谷歌 3.5 万亿、Meta 1.55 万亿、特斯拉 1.38 万亿、伯克希尔 1.2 万亿，以此说明 1.1 万亿是什么量级。</li><li>质疑的核心是护城河而非模型能力：更便宜的对手常在 6 到 12 个月内追平，一旦中国开源权重模型接近同等水平，估值可能迅速塌缩；也有人补充说 Anthropic 租算力而非自有算力，溢价空间更薄。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">3</span><span class="rep-name">AI 正在显著加速 AI 研究</span></div><div class="rep-meta">302 分 ｜ 247 评论 ｜ 已读原文 ｜ <span class="src">www.planned-obsolescence.org</span></div><a class="repo-link" href="https://www.planned-obsolescence.org/p/ai-is-dramatically-accelerating-ai">https://www.planned-obsolescence.org/p/ai-is-dramatically-accelerating-ai</a><p class="rep-sum">文章解读 METR 一份关于 Anthropic 内部 AI 研发加速的深度调查报告：2025 年 10 月到 2026 年 10 月，Anthropic 的能力进步速度约为此前 12 个月的两倍，作者认为这已越过其负责任扩展政策中「AI 导致进展显著加速」的门槛。由于算力乘数只是能力的一个输入，作者推算整体翻倍需要研究员生产力提升约 10 倍，这与 Anthropic 员工自述的约 12 倍提升相当吻合；报告中「最有信息量的大部分证据」被涂黑。作者的结论是，这条趋势指向比多数外部研究者（包括 AI 2027 团队）更短的时间线。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论怀疑加速来自资本堆出的算力与并行 agent 集群，而不是模型权重本身的变强，并认为文章没有正视即将到来的硬件与基础设施瓶颈。</li><li>反驳者指出 RSP 的归因条件本就排除了训练算力增长，用 agent 集群和更多 token 探索搜索空间，本身就是「AI 自动化 AI」。</li><li>历史类比被提出：80 年代 AI 热潮同样由昂贵的新工具推动，回报预期落空后迅速退潮；有人回应这次不同，Anthropic 已有约 800 亿美元 ARR，AI 的价值不再只是理论。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">4</span><span class="rep-name">Gemini Omni 1.2 Flash</span></div><div class="rep-meta">336 分 ｜ 230 评论 ｜ 已读原文 ｜ <span class="src">blog.google</span></div><a class="repo-link" href="https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemini-omni-1-2-flash/">https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemini-omni-1-2-flash/</a><p class="rep-sum">Google DeepMind 发布 Gemini Omni 1.2 Flash：支持原生 15 秒视频（可从 3 到 15 秒按 1 秒粒度指定）、多轮对话式剪辑、更强的参考一致性，角色、服饰、包装文字与品牌色在多机位与转场中不易漂移。价格比 Omni 1.1 下降 30%，720p 视频为每秒 0.07 美元，工作流上可先用 360p 或 720p 快速出草稿、再局部改、最后升到 1080p 或 4K。该模型已在 Gemini API、Google Vids 与 Gemini for business 上线。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>命名被集中吐槽：Gemini Omni 1.2 Flash 层层堆叠难以记忆，有人希望像汽车年款那样叫 Omni 2026.2，也有人提醒当年按尺寸加日期命名的模型同样被骂得很惨。</li><li>有人贴出 token 价格：输入每百万 1.50 美元，输出按文本与视频分别为 9.00 和 12.00 美元，与官方强调的每秒 0.07 美元形成对照。</li><li>有用户担心 15 秒原生生成让「用时长判断真假视频」的经验彻底失效，刻意伪造的写实视频将更难辨认。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">5</span><span class="rep-name">《杀出重围》（Deus Ex）</span></div><div class="rep-meta">355 分 ｜ 189 评论 ｜ 已读原文 ｜ <span class="src">www.filfre.net</span></div><a class="repo-link" href="https://www.filfre.net/2026/11/deus-ex/">https://www.filfre.net/2026/11/deus-ex/</a><p class="rep-sum">filfre.net 的长文复盘 2000 年 Ion Storm 的 Deus Ex：当年评价从 Computer Gaming World 的「有野心但缺陷明显」到 PC Powerplay 的「史上最佳游戏」两极分化，二十多年后它被 YouTube 一代奉为「最重要的电子游戏」「预言了未来」。作者要给这份神话降温：例如主角 J.C. Denton 的缩写确实真是「Jesus Christ」，但来源只是 Warren Spector 一位名叫 Denton、热心到让人受不了的朋友，与神学无关。文章把它的玩法谱系接到 Looking Glass 的沉浸式模拟传统上，称它是 Looking Glass 没做出来的最好的游戏。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>老玩家列出重玩必备的 mod 生态：新渲染器、新引擎、GMDX、The Nameless Mod、The Purist Mod 等，让二十多年前的游戏在新硬件上焕新。</li><li>多人把 Prey（2017）视作这一类型的绝唱，赞其关卡与氛围，但批评结局敷衍，甚至反过来削弱了前面的体验，只能靠脑补收尾。</li><li>Mooncrash DLC 被单独推崇：把本体机制改造成 roguelike，世界重置但部分内容保留；也有人认为重复与时间限制恰恰丢掉了探索与逐步揭开故事的乐趣。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">6</span><span class="rep-name">我们已知 1.5 万个网站被感染，怎么通知它们？</span></div><div class="rep-meta">156 分 ｜ 134 评论 ｜ 已读原文 ｜ <span class="src">scotthelme.co.uk</span></div><a class="repo-link" href="https://scotthelme.co.uk/we-know-15-579-websites-are-infected-how-do-we-tell-them/">https://scotthelme.co.uk/we-know-15-579-websites-are-infected-how-do-we-tell-them/</a><p class="rep-sum">Report URI 称已确认 15,579 个网站被植入恶意 JavaScript，保守估计合计每月超过 1.35 亿次访问受影响。攻击类型包括支付页信用卡盗刷（Magecart）、ClickFix 诱导装恶意软件、针对特定 iOS 版本的设备漏洞利用，以及跳转到钓鱼页；入口则包括 WordPress 等直接入侵、第三方脚本供应链、XSS，以及买回过期域名继续供货的 DeadTag 组织。作者坦言负责任披露跟不上发现速度：security.txt 使用率低，绝大多数邮件石沉大海，因此公开求助如何把情报变成行动。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>主流建议是直接公开名单，做成 haveibeenpwned 那样的可查询数据库，让站长自己来查，而不是靠逐个发邮件去追。</li><li>作者在更新中解释不公开的理由：名单上都是被入侵的受害者，一旦被吸收进各类黑名单，小企业想把自己摘出来几乎不可能。</li><li>有人担心公开等于给攻击者一份现成的目标清单，支持者反驳说这些站点的漏洞本来就能被扫到，公开不会让它们更脆弱；也有人认为这不算「负责任披露」，更像看着房子被搬空还先递名片。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">7</span><span class="rep-name">民主党对 SpaceX、xAI、Meta 和苹果启动国会调查</span></div><div class="rep-meta">131 分 ｜ 133 评论 ｜ <span class="src">www.washingtonpost.com</span></div><a class="repo-link" href="https://www.washingtonpost.com/technology/2026/11/06/after-courting-trump-corporate-america-faces-democratic-reckoning/">https://www.washingtonpost.com/technology/2026/11/06/after-courting-trump-corporate-america-faces-democratic-reckoning/</a><p class="rep-sum">据《华盛顿邮报》报道，中期选举后民主党人启动国会调查，对象包括 SpaceX、xAI、Meta 与苹果，主题是企业此前积极向特朗普政府靠拢、如今要面对的政治清算；该报道原文未能抓取，细节以标题与评论为准，本文不补充原文内容。相关讨论并未深入政策本身。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>评论区大量内容与政治无关，集中在如何绕过付费墙、archive.is 存档链接怎么生成，以及存档站的争议。</li><li>有人引用文中客户的比喻「我们整年都在跟客户说冬天要来了，现在冬天到了」，作为企业面对政治风向逆转的注脚。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">8</span><span class="rep-name">Ask HN：Ubuntu 到底在拖什么？</span></div><div class="rep-meta">202 分 ｜ 128 评论 ｜ <span class="src">站内讨论</span></div><a class="repo-link" href="https://news.ycombinator.com/item?id=50393105">https://news.ycombinator.com/item?id=50393105</a><p class="rep-sum">一则 Ask HN 追问 Ubuntu 为何迟迟没有把某项安全更新交付到位（提问正文未抓到，此处不补写）。跟帖里的实际观察是：补丁其实已经出现在 apt 源中，问题出在对外沟通与流程，官方 CVE 页面迟迟没有同步更新。讨论随即扩大到对 Canonical 这家公司的管理与招聘方式的批评。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人确认更新已经能在 apt 里看到，却仍不见 CVE 页面更新，感叹这实在太慢，猜测是要另一个部门的人去按按钮，而两个团队之间没有对齐。</li><li>批评集中在 Canonical 的招聘与管理：申请要填高中到大学的成绩、做大量问卷、写长文，多轮面试后还要见 Mark Shuttleworth，薪水却低于同行，被认为白白流失人才。</li><li>有人追问这番吐槽是否夹带私人恩怨，随后被指向 Canonical 公开的申请流程本身，认为问题在于制度而非个人。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">9</span><span class="rep-name">Rune：面向 macOS、Windows、Linux 与 Web 的 Rust 原生 GPU 渲染 UI 框架</span></div><div class="rep-meta">168 分 ｜ 121 评论 ｜ <span class="src">github.com</span></div><a class="repo-link" href="https://github.com/anomalyco/rune">https://github.com/anomalyco/rune</a><p class="rep-sum">anomalyco 发布 Rune，一个用 Rust 编写、由 GPU 渲染的原生 UI 框架，同时覆盖 macOS、Windows、Linux 与 Web；仓库页面正文未能抓取，故不转述其自述功能。从讨论看，它被定位为该公司桌面客户端从 Electron 迁出的底座，headless 能力是不少人关注的点。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人问它和 egui 有什么不同，被指出另一个项目 opentui 才是对标物，而 Rune 的 PLAN 文档写明的目标是把桌面端从 Electron 迁到 Rune。</li><li>体验者指出官网 demo 的细节问题：在 Windows 11 的 Chrome 下，每个窗口右下角的缩放手柄不可点击，只能横向拉伸，与整体精致程度不符。</li><li>对比延伸到 egui 与 iced 的官网：有人认为 egui 本是为嵌入游戏和 3D 应用而生、不该用来做网站，官方应改用普通网页展示 demo；也有人反驳 iced 官网同样卡顿、CPU 占用高。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">10</span><span class="rep-name">Asahi Linux 7.3 进展报告</span></div><div class="rep-meta">168 分 ｜ 120 评论 ｜ 已读原文 ｜ <span class="src">asahilinux.org</span></div><a class="repo-link" href="https://asahilinux.org/2026/11/progress-report-7-3/">https://asahilinux.org/2026/11/progress-report-7-3/</a><p class="rep-sum">Asahi Linux 发布 Linux 7.3 周期进展：macaudio 与 AVD 两个大驱动进入上游名单（分别约 3100 行与 13000 行），AVD 从下游树到提交只用了约三个月。M3 支持去掉 EXPERT 标志转为正式可用并启用 DCP，可睡眠、刘海区域可用；M4 Pro/Max 与 M5 的初始设备树出现，m1n1 已能在 EL1 下起三个 VM，从而虚拟化带 SPTM 与 Exclaves 的 macOS 以做逆向。M3 GPU 逆向已能让 m1n1 初始化 GPU 并画出三角形，承诺多年的 Thunderbolt 支持终于出现在邮件列表上。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人提议从 Omarchy 借鉴 macOS 化的界面思路，被提醒 Asahi 明确拒绝 LLM 参与开发，两者在「要不要用 AI 加速」上立场相反。</li><li>有评论认为拒绝 LLM 是自缚手脚，把速度优势让给更激进的团队；也有人指出上游内核允许 LLM 补丁，驱动最终仍会流入 Asahi，而且这本来就不是一场比赛。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">11</span><span class="rep-name">Kalshi 接连败诉，法官拒绝阻止各州赌博法</span></div><div class="rep-meta">109 分 ｜ 117 评论 ｜ 已读原文 ｜ <span class="src">arstechnica.com</span></div><a class="repo-link" href="https://arstechnica.com/tech-policy/2026/11/kalshi-court-losses-pile-up-as-judges-refuse-to-block-state-gambling-laws/">https://arstechnica.com/tech-policy/2026/11/kalshi-court-losses-pile-up-as-judges-refuse-to-block-state-gambling-laws/</a><p class="rep-sum">预测市场 Kalshi 在联邦法院连遭挫折：第九巡回法院拒绝全席重审，维持内华达可禁止其体育下注的判决；第二巡回法院维持纽约与康涅狄格可执行本州赌博法，并同时驳回了 Coinbase 对康涅狄格的同类上诉；阿肯色州总检察长又提起新诉讼，指其让 18 岁用户下注、不申请牌照、不缴税。Kalshi 主张自己是 CFTC 监管的联邦交易所、各州规则不一就无法运营，特朗普政府与 CFTC 站在它一边并已起诉十个州，而第三巡回法院曾在 4 月判新泽西无权监管。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人调侃在 Kalshi 和 Polymarket 上都找不到关于这起官司的盘口，讽刺预测市场对自身命运反而没有定价。</li><li>法律分歧集中在联邦优先权：一方认为州禁赌不需要最高法院点头，另一方指出最高法院终究要对 CFTC 权限与州权的冲突表态，而这套优先权理论本身并未写进成文法。</li><li>不少人直言预测市场就是伪装成金融产品的赌博，真正的问题只是谁有权监管、按什么标准收税。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">12</span><span class="rep-name">让廉价模型向 Opus 求助，以四分之一成本拿到 Opus 级准确率</span></div><div class="rep-meta">471 分 ｜ 109 评论 ｜ 已读原文 ｜ <span class="src">hightouch.com</span></div><a class="repo-link" href="https://hightouch.com/blog/llm-judges-identity-resolution">https://hightouch.com/blog/llm-judges-identity-resolution</a><p class="rep-sum">Hightouch 测试用廉价的「决策模型」给身份解析（把多条记录归并到同一个真人）结果打分：Jev 与 GPT-6 Luna 单独使用准确率为 88.8% 到 97.3%，价格最多便宜 90 倍、快 10 倍以上，每 1000 条身份成本 0.05 到 0.10 美元、约 0.15 秒返回，但在更难的基准上仍落后 Opus 约 6 个百分点。他们用 Jev 的置信度做门控，把低置信度样本交给 Opus 复核，在成本降低 4 倍以上的情况下逼近前沿模型准确率；关键发现是 Jev 校准良好、错误多为低置信度，而 Luna 的错误往往是高置信度误判。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>评论认为关键不在接力的是 Opus 还是别家，而在 Jev 的置信度校准够好：只有低置信度才升级，混合方案才撑得起低成本高准确率。</li><li>有人指出 Luna 在简单题上更强却校准很差，因此整体反而不如 Jev 适合这种分层架构。</li><li>实践者称在安全工程里用同样的分层判断（小模型筛工具调用与意图，大模型兜底）效果不错；也有人用本地小模型做同类校验，但不敢完全依赖。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">13</span><span class="rep-name">Firecracker 虚拟机逃逸：PwnEscape 第二篇</span></div><div class="rep-meta">236 分 ｜ 105 评论 ｜ 已读原文 ｜ <span class="src">pwn.ai</span></div><a class="repo-link" href="https://pwn.ai/blog/firecracker-escape">https://pwn.ai/blog/firecracker-escape</a><p class="rep-sum">pwn.ai 披露在 Firecracker 上完成逃逸（CVE-2026-99999）：利用第一篇文章给出的宿主物理内存读写原语，先用 nonce 定位客户机页在宿主内存中的位置、逆向找回 EPT 根，再找到 Firecracker 进程的页全局目录与加载偏移，最后定位并改写活跃 vCPU 线程从 KVM_RUN 返回时保存的 pt_regs，让宿主执行任意调用，从而以 root 权限执行代码。攻击后 Firecracker 仍在运行，VM 通过 SSH 依然可访问。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人借此主张 Nova 微内核路线：用约十万行、经过形式化验证的小微内核托管 Linux 等复杂内核，而不是让庞大脆弱的 KVM 与虚拟机生态守住最底层。</li><li>反驳者提醒 Nova 仓库至今写着「实验性、功能不完整，坏了你两半都留着」，这句警告已挂了 14 年，尽管有商用分支部署在政府和风险场景。</li><li>关于「代码库越小越安全」的讨论：有人指出 Xen 前几天也爆出能触及 Dom0 内存的漏洞，形式化验证能排除整类 bug，但最终仍取决于实现细节。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">14</span><span class="rep-name">我们做了 11 年的开源特性开关服务</span></div><div class="rep-meta">155 分 ｜ 102 评论 ｜ <span class="src">github.com</span></div><a class="repo-link" href="https://github.com/Unleash/unleash">https://github.com/Unleash/unleash</a><p class="rep-sum">Unleash 作者回顾这个开源特性开关（feature flag）平台已持续开发 11 年：2014 年它只是作者所在公司的内部工具，目标是不做「大爆炸式发布」也能持续上生产，如今已有 25 种以上语言的 SDK。设计上强调服务端 SDK 拉取配置后在进程内求值，用户数据不出应用、一次开关判断只是一次内存读取；求值逻辑用 Rust 写一次（Yggdrasil）嵌入各语言 SDK 以保证行为一致，另有面向前端与边缘客户端的 Rust 代理缓存 Unleash Edge。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>作者本人在场回应取舍：平台自带功能够用就别迁移，团队真正转向多是因为合规、双人审批、扩展性与开关生命周期追踪。</li><li>有创业公司用户说它「看起来简单、实际做得很多」，在四处试错找 PMF 的阶段帮了大忙。</li><li>有人断言「配置即服务」正被 LLM 侵蚀：自建一个功能开关系统对 LLM 是简单任务，而外部依赖反而成了攻击面与单点故障；也有人反驳，规模上去后仍需要一个能背锅的供应商，但出了故障客户并不会因此少怪你。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">15</span><span class="rep-name">libghostty 1.0</span></div><div class="rep-meta">633 分 ｜ 98 评论 ｜ 已读原文 ｜ <span class="src">mitchellh.com</span></div><a class="repo-link" href="https://mitchellh.com/writing/libghostty-1-0">https://mitchellh.com/writing/libghostty-1-0</a><p class="rep-sum">Mitchell Hashimoto 宣布 libghostty-vt 1.0：这是从 Ghostty 核心抽出的可移植、高性能终端模拟 C 库，1.0 意味着库本身与 C ABI 都稳定，遵循语义化版本并给出严格的 ABI 兼容承诺。实现上用不透明句柄配少量枚举键的存取器，结构体自带长度以便追加字段，枚举固定为 int，ELF 上导出符号带版本，CI 用 libabigail 对照基线、并在 macOS 与 WebAssembly 上对照黄金类型清单。落地情况包括 JetBrains 全系 IDE 的终端（逾 1250 万活跃用户）、Neovim 替换 libvterm 的 PR 已获批，以及 KDE、Turborepo、OrbStack、Ghostel 等项目。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>用户反馈 JetBrains 内置终端换用后体验明显提升：过去 JediTerm 不支持某些转义序列、渲染错乱、输出被截断的问题基本消失，「现在就是能正常工作」。</li><li>Emacs 侧 Ghostel 被认为是最开箱即用的终端模拟器，有人说终于能在 Emacs 里跑 nvim +term 再调起 emacs -nw，玩起嵌套编辑器。</li><li>在 0.x 版本泛滥的时代，一个知名项目认真做到 1.0 并给出稳定 ABI 承诺，被评论视为难得的工程态度。</li></ul></div>
+
+<div class="foot">共 15 条链接，取到原文 10 条，收录评论 120 条。<br>
+本日报由 Ember 自动生成，摘要与评论要点由 AI 综合原文与讨论生成，仅供参考。</div>
+
+</main>
+</body>
+</html>
