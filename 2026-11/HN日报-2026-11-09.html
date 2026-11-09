@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Hacker News 日报</title>
+<style>
+  :root{
+    --accent:#ff6600; --ink:#111827; --body:#374151; --muted:#6b7280;
+    --line:#e7e5e4; --bg:#f7f6f4; --card:#ffffff; --thead:#f6f4f1; --chip:#f1f5f9;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --ink:#f1f5f9; --body:#cbd5e1; --muted:#94a3b8;
+      --line:#2b3441; --bg:#0e131a; --card:#151c26; --thead:#1c2531; --chip:#1c2531; }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%; scroll-behavior:smooth}
+  body{margin:0; background:var(--bg); color:var(--body);
+    font:16px/1.8 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Droid Sans Fallback",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased; padding-bottom:40px}
+  .wrap{max-width:1040px; margin:0 auto; padding:0 16px}
+
+  .hero{background:var(--accent); color:#fff; padding:30px 0 24px; border-radius:0 0 18px 18px}
+  .hero .wrap{padding:0 20px}
+  .kick{font-size:12px; letter-spacing:.22em; text-transform:uppercase; opacity:.85}
+  .hero h1{margin:.2em 0 .12em; font-size:clamp(24px,4.8vw,36px); line-height:1.25}
+  .hero .date{font-size:13.5px; opacity:.92}
+  .hero .sub{font-size:14px; opacity:.9; margin-top:4px}
+  .stats{display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:12px; font-size:13px}
+  .stats span{background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.24);
+    border-radius:999px; padding:3px 11px}
+
+  h2{font-size:19px; color:var(--accent); margin:30px 0 10px; padding-left:11px;
+    border-left:5px solid var(--accent); line-height:1.4}
+  h3{font-size:15.5px; color:var(--ink); margin:16px 0 6px}
+  p{margin:.55em 0}
+  a{color:var(--accent)}
+
+  .tw{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:8px 0 10px;
+    border:1px solid var(--line); border-radius:10px}
+  .tw table{margin:0; border:0}
+  table{border-collapse:collapse; width:100%; font-size:15px; background:var(--card)}
+  th,td{border-bottom:1px solid var(--line); padding:8px 11px; text-align:left}
+  th{background:var(--thead); color:var(--ink); font-weight:700; font-size:13.5px}
+  tr:last-child td{border-bottom:0}
+
+  footer{margin-top:26px; padding-top:14px; border-top:1px solid var(--line);
+    font-size:12.5px; color:var(--muted); line-height:1.8}
+  .foot{margin:0}
+
+  @media (min-width:900px){ h2{margin-top:34px} }
+  @media print{
+    body{background:#fff; padding:0; font-size:10.5pt}
+    .hero{background:#fff; color:#000; border-radius:0; border-bottom:2px solid var(--accent); padding:0 0 8px}
+    .stats span{border:1px solid #999}
+    .tw{overflow:visible}
+    h2{break-after:avoid}
+  }
+  
+  .headline{font-size:19px;line-height:1.6;font-weight:700;color:var(--ink);
+    background:rgba(255,102,0,.08);border-left:4px solid var(--accent);border-radius:8px;
+    padding:12px 14px;margin:6px 0}
+  ul.highlights{margin:.2em 0 .8em;padding-left:1.15em}
+  ul.highlights li{margin:.35em 0}
+  .overview{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;color:var(--body);margin:10px 0 16px}
+  .repo{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;margin:12px 0;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+  .rep-head{font-size:17px;font-weight:700;color:var(--ink);line-height:1.45}
+  .rank{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;
+    border-radius:50%;background:var(--accent);color:#fff;font-size:12.5px;margin-right:8px;vertical-align:1px}
+  .rep-meta{font-size:13px;color:var(--muted);margin:4px 0 2px}
+  .src{color:var(--muted)}
+  .repo-link{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 8px;
+    word-break:break-all;text-decoration:none}
+  .rep-sum{font-size:16px;line-height:1.85;color:var(--body);margin:.3em 0}
+  .cmt-ttl{font-size:14px;font-weight:700;color:var(--accent);margin:12px 0 4px}
+  .cmts{padding-left:1.2em;margin:.2em 0}
+  .cmts li{font-size:15px;line-height:1.75;margin:.3em 0}
+  .badge-repeat{font-size:11.5px;border:1px solid var(--line);border-radius:999px;
+    padding:0 8px;margin-left:6px;color:var(--muted);font-weight:400}
+  .foot{margin-top:24px;border-top:1px solid var(--line);padding-top:12px;
+    font-size:12.5px;color:var(--muted);line-height:1.8}
+  .na{color:#b6bcc5}
+
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="kick">HACKER NEWS · DAILY BRIEF</div>
+    <h1>Hacker News 日报</h1>
+    <div class="date">2026-11-09</div>
+    <div class="sub">黄仁勋道歉与AI泡沫之辩同日霸榜，HN在信任与怀疑间拉扯</div>
+    <div class="stats"><span>15 条链接</span><span>120 条评论</span><span>AI 中文小结</span></div>
+  </div>
+</header>
+<main class="wrap">
+
+<div class="hdr">
+
+
+
+<div style="font-size:16.1pt;font-weight:bold;color:#586069;margin-bottom:3px;">一句话概括</div>
+<div class="headline">黄仁勋道歉与AI泡沫之辩同日霸榜，HN在信任与怀疑间拉扯</div>
+<div style="font-size:16.1pt;font-weight:bold;color:#586069;margin-bottom:3px;">今日话题</div>
+<ul class="highlights"><li>黄仁勋就婚外情致歉员工，英伟达董事会启动独立调查</li><li>OpenAI以1.25万亿美元估值融到110亿美元，低于原目标</li><li>高盛禁止交易员与投行部门使用Claude Code，仅限工程师</li><li>Outlook.com悄然拒收未发布DMARC记录的域名邮件</li><li>64GB内存跑284B DeepSeek、Rust版SketchUp引热议</li></ul>
+<p class="overview">今天的 HN 被两条主线占据：一是英伟达的治理危机，黄仁勋的道歉信与董事会的独立调查把 CEO 私德、国家安全和股东信任绑在一起；二是 AI 资本与工具的边界，OpenAI 缩水的巨额融资、高盛收回编码代理权限、以及对 AI 泡沫的正面反驳，构成同一枚硬币的两面。技术侧则回归务实：DMARC 投递规则、极限量化跑大模型、开源建模工具的完成度，讨论都落在能不能用、值不值得用。共识是 AI 已深度嵌入日常工作，分歧在于这套体系的风险该由谁承担、又该如何定价。</p>
+
+<h2>热门链接与讨论</h2>
+</div>
+<div class="repo"><div class="rep-head"><span class="rank">1</span><span class="rep-name">英伟达CEO黄仁勋就婚外情致员工信</span></div><div class="rep-meta">677 分 ｜ 723 评论 ｜ 已读原文 ｜ <span class="src">nvidianews.nvidia.com</span></div><a class="repo-link" href="https://nvidianews.nvidia.com/news/a-message-to-our-company">https://nvidianews.nvidia.com/news/a-message-to-our-company</a><p class="rep-sum">黄仁勋在英伟达官网发布致员工信，承认对妻子不忠，向家人、同事、董事会、合作伙伴与股东道歉，称愿承担全部责任；针对媒体报道中的国家安全担忧，他表示董事会已启动独立调查，自己将全面配合并保护公司与美国国家安全。讨论焦点不在事件本身，而在道歉的质量与 CEO 的判断力：有人认为这封信没有推诿、堪称危机沟通范本，也有人认为它出自专业公关团队，无法抵消背叛家人与治理失守。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论称赞信中没有任何「这不是我」式辩解，也没有把责任推给间谍，是道歉的正确写法；反方认为这恰恰说明他背后有优秀的公关顾问，接受建议不值得额外加分。</li><li>多人认为面对国家级情报资源，绝大多数人都会被「美人计」攻破；立刻有人反驳：事先决定不越界就能让整套攻势失效，做不到说明其品性与判断力不适合掌管公司。</li><li>还有人把讨论拉回治理层面：真正重要的是董事会调查会查出什么、国家安全是否受影响，而不是对私德进行道德审判。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">2</span><span class="rep-name">Ask HN：你最近在做什么？（2026年11月）</span></div><div class="rep-meta">213 分 ｜ 705 评论 ｜ <span class="src">站内讨论</span></div><a class="repo-link" href="https://news.ycombinator.com/item?id=50417407">https://news.ycombinator.com/item?id=50417407</a><p class="rep-sum">这是 HN 每月固定的「你在做什么」征集帖，本月获得 213 分、705 条评论，原文未取到，以下仅据标题与讨论归纳。回复横跨生活与工程：有人把目标定为多陪孩子、替伴侣分担家务，也有人分享坚持十年的体素引擎、多设备一致性存储方案和维修报价平台等 side project。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>一位开发者做体素游戏引擎 Bonsai 约十年，用 SDF/密度场表示世界，地形生成与编辑器几乎全在 GPU 上运行；他说最近才认真用 AI 写内存分配器这类枯燥代码，结果出乎意料地好。</li><li>有人想做「多设备、自动、无服务器备份、元数据始终一致」的存储系统，希望以 GPLv3 发布，并按文件优先级决定副本数量。</li><li>还有人想做一个连接普通用户与电子、汽车维修师傅的报价平台，被提醒类似服务已经存在。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">3</span><span class="rep-name">我不认为AI泡沫存在</span></div><div class="rep-meta">284 分 ｜ 473 评论 ｜ 已读原文 ｜ <span class="src">matteoraso.github.io</span></div><a class="repo-link" href="https://matteoraso.github.io/im-not-convinced-the-ai-bubble-exists.html#im-not-convinced-the-ai-bubble-exists">https://matteoraso.github.io/im-not-convinced-the-ai-bubble-exists.html#im-not-convinced-the-ai-bubble-exists</a><p class="rep-sum">作者正面反驳「AI 泡沫即将破裂」的舆论共识：AI 公司已承诺至少 3 万亿美元支出、累计花费约 5 万亿美元，但数据中心是一次性资本开支而非长期运营成本；Anthropic 的 S-1 显示每 1 美元算力带来 2.08 美元收入，营收从 2023 年的 4100 万美元增至 2026 年上半年的 163 亿美元。即便把 5 万亿美元债务摊到 20 年、每年需约 2500 亿美元，也并非不可承受，而程序、数学、法律与医疗等场景的需求还远未释放。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论直接修正模型假设：成本主体是 GPU 而不是建筑，应按 5 到 6 年折旧，所需年收入要乘以 4，作者的算式过于乐观。</li><li>有人承认估值未必合理，但可用性与潜在利润是真实的，十年尺度上泡沫破不破并不重要；反方用 2007 至 2008 年的房地产类比：真实需求从来不保证价格不崩。</li><li>也有人指出，如果买了大量 GPU 却没有机房和电力配套，硬件只会躺在仓库里贬值，这本身就是泡沫迹象。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">4</span><span class="rep-name">高盛禁止银行家与交易员使用Claude Code</span></div><div class="rep-meta">779 分 ｜ 412 评论 ｜ 已读原文 ｜ <span class="src">www.thestateofai.com</span></div><a class="repo-link" href="https://www.thestateofai.com/news/goldman-sachs-claude-code-traders-bankers">https://www.thestateofai.com/news/goldman-sachs-claude-code-traders-bankers</a><p class="rep-sum">据 Bloomberg 报道，高盛 10 月更新内部指引，把 Anthropic 的 Claude Code 与微软 GitHub 编码工具限制在约 1.2 万名工程师范围内，交易员和投行人员由此失去访问权；此前他们用这些工具追踪客户资金流、建模市场走势与持仓。文章认为交易大厅运行无人审阅的代码、叠加信息隔离墙风险，限制本身合理，但高盛 CIO 7 月还在称赞交易员「vibe coding」，如今只发一纸指引、没有替代方案，执行方式欠妥。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论指出原始信源其实是 Bloomberg，本文所在的 State of AI 是疑似由 AI 批量生成的内容站，提醒读者注意。</li><li>有人反驳「代码应由受过审查训练的人来写」：工程师自己也在失去读代码的能力，代理式工程要么全押、要么别做，中间路线只会制造摩擦。</li><li>也有评论同情非技术员工：与其收回权限，不如为他们设计一个「伤不到自己」的编程环境，让最接近业务的人自己造工具。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">5</span><span class="rep-name">英伟达董事会声明</span></div><div class="rep-meta">468 分 ｜ 351 评论 ｜ 已读原文 ｜ <span class="src">nvidianews.nvidia.com</span></div><a class="repo-link" href="https://nvidianews.nvidia.com/news/statement-from-nvidia-board-of-directors">https://nvidianews.nvidia.com/news/statement-from-nvidia-board-of-directors</a><p class="rep-sum">董事会宣布，就媒体报道黄仁勋成为外国情报行动目标一事启动独立调查，由独立董事组成的委员会在外部独立律师协助下主导。声明称目前没有理由认为国家安全或英伟达机密受到损害，调查将审视所有可用信息，并表达对黄仁勋及其管理团队的信心。讨论把这份声明与「未始终对董事会保持坦诚」的经典措辞联系起来，也有人质疑股东视角的辩护。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论把这次调查类比当年那句「未始终对董事会坦诚」，暗示问题可能不止私德，还涉及信息披露。</li><li>有人认为情报行动不构成借口：外国情报没有强迫他出轨，CEO 理应识别「美人计」。</li><li>也有人不满评论区大量站在股东立场为亿万富翁辩护，随即被反驳：HN 是匿名技术论坛，并非「富豪论坛」。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">6</span><span class="rep-name">Outlook.com开始拒收未发布DMARC记录的域名邮件</span></div><div class="rep-meta">407 分 ｜ 287 评论 ｜ 已读原文 ｜ <span class="src">mailroute.net</span></div><a class="repo-link" href="https://mailroute.net/blog/outlook-rejecting-email-without-dmarc">https://mailroute.net/blog/outlook-rejecting-email-without-dmarc</a><p class="rep-sum">MailRoute 创始人记录：自 2026 年 11 月 5 日起，Outlook.com、Hotmail、Live 与 MSN 开始拒收部分来自没有 DMARC 记录域名的邮件，只拒一部分、微软也未发布任何公告。受影响域名多数 SPF 与 DKIM 正常，缺的是把两者绑定到 From 地址的 DMARC 记录；加一条 v=DMARC1; p=none 的 TXT 记录即可修复，且不改变其他接收方对你的处理方式。文章强调 p=none 已是投递底线，也是走向 p=reject 的第一步。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有运维人员确认遇到同样问题：域名 SPF、DKIM 都正常，只因没有 DMARC，邮件从这个周末开始退信。</li><li>有人支持这种强制认证，认为能减少冒充正规服务的诈骗；批评点在于微软完全没有提前通知，退信也不说明究竟哪项校验失败。</li><li>也有人质疑 p=none 在 SPF/DKIM 已对齐时到底证明了什么，得到的解释是：没有 DMARC 记录，接收方根本不会执行这些校验。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">7</span><span class="rep-name">自JB Straubel卸任CTO后，特斯拉再没有成功的新产品发布</span></div><div class="rep-meta">199 分 ｜ 265 评论 ｜ <span class="src">cleantechnica.com</span></div><a class="repo-link" href="https://cleantechnica.com/2026/11/07/tesla-hasnt-had-a-successful-new-product-launch-since-jb-straubel-stepped-down-as-cto/">https://cleantechnica.com/2026/11/07/tesla-hasnt-had-a-successful-new-product-launch-since-jb-straubel-stepped-down-as-cto/</a><p class="rep-sum">文章标题主张，自 JB Straubel 离开 CTO 岗位后，特斯拉未再推出成功的新产品；原文未取到，以下仅据标题与讨论归纳。评论没有纠缠产品清单，而是转向特斯拉是否已经放弃「车企」身份，把叙事押在 robotaxi 与 Optimus 上，以及约 1.4 万亿美元市值究竟靠什么支撑。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论认为特斯拉正转型为 SpaceX 式的垂直整合机器人部门，早已不只是汽车公司，但 3 与 Y 仍靠市场惯性维持竞争力。</li><li>也有人指出充电网络与碳积分收入可能才是公司更有价值的部分，当前估值主要押注完全自动驾驶。</li><li>关于 robotaxi，有人认为市场押的是五年内全国铺开，但责任与保险仍未解：人类司机各自投保，自动驾驶出事故则要企业承担整支车队的风险。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">8</span><span class="rep-name">为什么我不在编程中使用LLM</span></div><div class="rep-meta">115 分 ｜ 231 评论 ｜ <span class="src">www.polso.info</span></div><a class="repo-link" href="https://www.polso.info/why-i-will-not-be-using-llms-coding">https://www.polso.info/why-i-will-not-be-using-llms-coding</a><p class="rep-sum">原文未取到，仅能依据标题与讨论：作者主张在编码中不使用 LLM，评论区围绕这是否只是新一轮技术抗拒展开。反对方类比「拒绝买超市食物、坚持自己种地」，支持方则认为工具用不用是个人选择，真正的分歧在于是否还看代码。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论把这种拒绝比作不买食物而自己翻土种植，认为作者是在说服自己，一个月后就会回来。</li><li>一位自称竞技编程出身、写了 15 年多语言的开发者说，自己已半年没写一行代码，产出却更快、质量更高，只是心情复杂；随即被追问「不看代码怎么知道质量更高」。</li><li>他解释说靠人工测试、自动化测试、基准测试、用户反馈和销量来判断结果；也有人补刀：竞技编程者本来就不以可读性见长。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">9</span><span class="rep-name">OpenAI以1.25万亿美元估值融资110亿美元</span></div><div class="rep-meta">187 分 ｜ 206 评论 ｜ 已读原文 ｜ <span class="src">247wallst.com</span></div><a class="repo-link" href="https://247wallst.com/investing/2026/11/07/openai-just-raised-11-billion-at-a-1-25-trillion-valuation-below-the-1-4-trillion-it-first-sought/">https://247wallst.com/investing/2026/11/07/openai-just-raised-11-billion-at-a-1-25-trillion-valuation-below-the-1-4-trillion-it-first-sought/</a><p class="rep-sum">据 24/7 Wall St. 报道，约 110 亿美元新资金已于 11 月 6 日到账，这是以 1.25 万亿美元 pre-money 估值定价的新一轮首付款，仅相当于最初 300 亿美元目标的约 37%；SoftBank 与阿布扎比 MGX 参与，后续资金可能把总额推到 200 亿美元。CFO Sarah Friar 称三季度环比增长 70%、企业业务翻倍、ChatGPT 周活 12 亿、广告年化收入 8 月达 10 亿美元，但未给出营收绝对值；文章认为这对微软主要是账面收益问题，对英伟达则是融资链依赖问题。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有人问全球有多少家市值超 1 万亿美元的公司，回答列出约 14 家，并指出 2016 年 Aramco 是首个但自由流通股仅 2.5%，苹果才是首个接近全流通的万亿美元公司。</li><li>有评论把这 14 家公司加上 OpenAI、Anthropic 的估值与美国 GDP 相比，认为「数字对不上」；也有人反驳市值与 GDP 计量含义不同，这种比较容易误导。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">10</span><span class="rep-name">Llama-modchip：64GB内存、无GPU跑284B DeepSeek</span></div><div class="rep-meta">422 分 ｜ 191 评论 ｜ <span class="src">github.com</span></div><a class="repo-link" href="https://github.com/synchopate/llama-modchip">https://github.com/synchopate/llama-modchip</a><p class="rep-sum">原文未取到，仅据标题与评论归纳：该项目声称能在 64GB 内存、不使用 GPU 的机器上运行 284B 参数的 DeepSeek 模型。讨论的核心疑问是量化位宽与输出质量，以及这种极限量化在实际使用中是否值得。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>最集中的质疑是量化到几位：有人推测是 2-bit，担心输出质量会明显下降。</li><li>反驳观点是，和原模型比当然差，但和 64GB 内存能跑的其它模型比未必差，大模型对量化的耐受度通常更好。</li><li>有实践者称 32 到 64GB 是本地模型变得实用的门槛，低于 4-bit 的量化往往语无伦次，而且不同模型的量化曲线差异很大。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">11</span><span class="rep-name">《疑犯追踪》</span></div><div class="rep-meta">302 分 ｜ 191 评论 ｜ 已读原文 ｜ <span class="src">krthr.co</span></div><a class="repo-link" href="https://krthr.co/person-of-interest/">https://krthr.co/person-of-interest/</a><p class="rep-sum">作者重看 15 年前开播的《疑犯追踪》（Person of Interest），认为它对今天的监控与 AI 现实比当年更贴切，也勾起 2010 年代初 SOPA/PIPA 争议、Megaupload 关站等互联网记忆；文中还附了西班牙语版本。评论区普遍认同该剧经得起时间考验，并反复把它与当下的 AI 和监控产业对照。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>多人称这是每年必刷的剧，随着近几年 AI 发展，它「越来越像纪录片」。</li><li>有评论借剧集提到现实中的 Flock 车牌监控争议，以及规模庞大的美国监控产业。</li><li>也有人泼冷水：后几季变得可预测、被拉长，剧中一些电脑界面还是直接借用 DaisyDisk 等真实软件截图。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">12</span><span class="rep-name">我如何对抗AI脑疲劳</span></div><div class="rep-meta">250 分 ｜ 172 评论 ｜ 已读原文 ｜ <span class="src">sergeykuhne.com</span></div><a class="repo-link" href="https://sergeykuhne.com/blog/fighting-ai-brain-fry">https://sergeykuhne.com/blog/fighting-ai-brain-fry</a><p class="rep-sum">作者描述同时开二十个 Claude Code 或 Codex 会话导致注意力崩溃，于是把工作改造成优先队列：每张工单是仓库里的 markdown 文件，看板状态提交进 git，代理循环处理可自动构建的工单，只有需要人类判断的事项进入「owner inbox」。核心动作是「关闭」——处理完一项就把上下文交还队列，不在脑中挂账；他强调工具链仍不完美，但不再感到分心和迷失。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论说仍坚持刷 LeetCode，认为不主动训练，解题能力会像不运动的身体一样萎缩；也有人认为这种焦虑被夸大，真正会退化的只有编码技能。</li><li>一位写了 30 年代码的人表示「AI 脑疲劳」真实存在，现在去面试会害怕。</li><li>也有人反驳：很多人已经相信 AI 代码完美、不必再写一行，这种想法本身才是脑力萎缩的证据。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">13</span><span class="rep-name">在世界大部分地区解锁某品牌任意一辆车</span></div><div class="rep-meta">350 分 ｜ 138 评论 ｜ 已读原文 ｜ <span class="src">shubs.io</span></div><a class="repo-link" href="https://shubs.io/unlocking-any-car-from-x-brand-in-most-of-the-world/">https://shubs.io/unlocking-any-car-from-x-brand-in-most-of-the-world/</a><p class="rep-sum">安全研究者与 Sam Curry 合作，从汽车 App 的 APK 逆向出发，在厂商的遥测与身份域下发现暴露在公网的 admintool 测试后台、硬编码 API key，以及 ForgeRock OpenIDM 的管理员凭据。利用车牌到 VIN、再到订户 GUID 与账户邮箱的链条，并伪造消费者 auth token，就能对任意车辆执行远程解锁、鸣笛、启动等操作；文章批评厂商把 staging 与 QA 环境直接暴露在互联网上。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有回复称已替换视频、降低刺耳提示音的音量，并致歉此前的影响。</li><li>有评论在 Firefox 桌面端无法播放 h265 视频，引发 h264、h265 与 AV1 的兼容性和画质之争，有人引用 Netflix 数据称 AV1 的 VMAF 高于 AVC 与 HEVC。</li><li>也有人提醒文章内视频音量极大，观看前先调低音量。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">14</span><span class="rep-name">KetchUp：用Rust与WebGPU打造的开源SketchUp替代品</span></div><div class="rep-meta">493 分 ｜ 137 评论 ｜ 已读原文 ｜ <span class="src">ketchup3d.github.io</span></div><a class="repo-link" href="https://ketchup3d.github.io/app/">https://ketchup3d.github.io/app/</a><p class="rep-sum">KetchUp（页面内也称 BenchUp）是 MIT 许可、用 Rust 编写的开源 3D 建模工具，面向木工与家具设计，可在桌面浏览器或 Windows、macOS、Linux 上运行。它支持推拉建模、精确尺寸与吸附、组件和标签、导入 SketchUp 几何、导出 OBJ，模型本地自动保存，无需账号或云存储。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>多人提醒名字与 SketchUp 太接近，有商标风险，作者回应说考虑改名为 Dovetail3D；也有人指出 KetchUp 丢掉了「sketch」的双关，反而失去含义。</li><li>体验反馈集中在细节：每画一个矩形都被要求命名、push/pull 不能一键拖拽、默认不对齐网格，被批「只完成 80%，缺少真正好用的最后 20% 打磨」。</li><li>也有人称赞 Rust UI 在浏览器里的手感和文字渲染，认为 Rust 可能是跨平台 Web 与移动应用的未来。</li></ul></div><div class="repo"><div class="rep-head"><span class="rank">15</span><span class="rep-name">RAM Altman：Linux脚本每天给Sam Altman发邮件，报告你PC里有多少闲置内存</span></div><div class="rep-meta">230 分 ｜ 133 评论 ｜ <span class="src">respawnfirst.com</span></div><a class="repo-link" href="https://respawnfirst.com/linux-script-emails-sam-altman-unused-ram-ram-altman/">https://respawnfirst.com/linux-script-emails-sam-altman-unused-ram-ram-altman/</a><p class="rep-sum">原文未取到，仅据标题与讨论归纳：有人写了一个 Linux 脚本，每天把本机未使用的内存容量以邮件形式发给 Sam Altman，作为对「所有算力都流向数据中心」的调侃式抗议。评论由此延伸到消费者是否正在失去本地算力与「计算主权」。</p><div class="cmt-ttl">社区讨论</div><ul class="cmts"><li>有评论感叹：算力都在涌向数据中心，普通人最终只能拥有一部手机。</li><li>争论焦点是这是否算消费者「用脚投票」：一方认为人们为便利放弃了计算主权，另一方认为硬件路线由投资者、董事会与厂商决定，消费者并没有真正可选项。</li><li>也有人认为多数人本就不在乎本地算力，只关心计算带来的结果，轻薄终端加网络对 80% 的人更划算；随即被批评这种「普通人不在乎被巨头拿捏」的论调缺乏自省。</li></ul></div>
+
+<div class="foot">共 15 条链接，取到原文 10 条，收录评论 120 条。<br>
+本日报由 Ember 自动生成，摘要与评论要点由 AI 综合原文与讨论生成，仅供参考。</div>
+
+</main>
+</body>
+</html>
